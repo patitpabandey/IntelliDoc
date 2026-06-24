@@ -577,11 +577,110 @@ intellidoc/
 │   └── *.pdf / *.csv                 # Real Global Bank N.A. custody documents
 ├── scripts/
 │   ├── generate_sample_data.py       # synthetic custody banking documents
-│   └── load_samples_to_s3.py         # upload with CBDC metadata
+│   ├── load_samples_to_s3.py         # upload with CBDC metadata
+│   ├── monitor_pipeline.py           # end-to-end pipeline health monitor (Python)
+│   └── monitor_pipeline.sql          # monitoring queries for Snowflake Worksheet
 └── tests/
     ├── test_validation.py            # Lambda + DynamoDB CBDCCollection tests
     ├── test_chunking.py              # PDF/CSV/XLSX extraction tests
     └── test_search.py                # RAG pipeline unit tests
+```
+
+---
+
+## Pipeline Monitoring
+
+IntelliDoc ships with a built-in end-to-end monitoring tool that checks every stage of the pipeline in order — from S3 through Lambda, Snowpipe, Tasks, AI processing, and search.
+
+### Python monitor (recommended)
+
+```bash
+# Full pipeline health check (last 24 hours)
+python scripts/monitor_pipeline.py
+
+# Summary dashboard only
+python scripts/monitor_pipeline.py --dashboard
+
+# Check a specific stage only
+python scripts/monitor_pipeline.py --stage 6
+
+# Custom look-back window
+python scripts/monitor_pipeline.py --hours 48
+```
+
+**Stages checked:**
+
+| Stage | What is monitored |
+|---|---|
+| 1 — S3 | Object counts in `/incoming/`, `/validated/`, `/quarantine/` |
+| 2 — Lambda | CloudWatch error counts for the validation function |
+| 3 — Snowpipe | Pipe execution state, pending file count, copy history + errors |
+| 4 — Stream + Routing | `LANDING_STREAM` pending data, `ROUTING_TASK` run history + return values |
+| 5 — Task DAG | `EXTRACT_TASK`, `EMBED_TASK`, `CLASSIFY_TASK` — state + last run result |
+| 6 — Audit | `DOCUMENT_REGISTRY` status breakdown, stuck files (>30 min), failed steps |
+| 7 — AI Quality | Classification type/confidence distribution, chunk count + token stats per file |
+| 8 — Search | Recent queries, confidence breakdown, average execution time |
+| Dashboard | One-line health summary — HEALTHY / NEEDS ATTENTION / WARNING |
+
+**Example dashboard output:**
+
+```
+IntelliDoc Pipeline Monitor  |  look-back: 24h  |  2024-06-24 10:30:00
+
+  Component                      Status       Detail
+  ──────────────────────────────────────────────────────────────────────
+  Snowpipe                       OK RUNNING   pending=0
+  Landing Stream                 OK EMPTY     unprocessed rows
+  Files Available to Search      OK 9
+  Files Failed                   OK 0
+  Files Stuck >30min             OK 0
+  Searches (last 24h)            OK 3
+
+  Overall: HEALTHY
+```
+
+**Warning signs and fixes:**
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `pipe_state ≠ RUNNING` | Pipe suspended | `ALTER PIPE INTELLIDOC_LANDING_PIPE SET PIPE_EXECUTION_PAUSED = FALSE` |
+| `pipe_pending_files > 0` for 5+ min | SQS event notification not configured | Re-wire S3 event notification with pipe's `notification_channel` ARN |
+| `stream_has_data = TRUE` for 5+ min | `ROUTING_TASK` suspended | `EXECUTE TASK ROUTING_TASK` |
+| `files_stuck_30min > 0` | Extract/Embed/Classify task failed | Check `DOCUMENT_PROCESSING_AUDIT` for `STATUS = 'FAILED'` |
+| `files_failed > 0` | Processing error | Run Stage 6 check — `ERROR_MESSAGE` shows exact cause |
+
+### Snowflake Worksheet monitor
+
+For a quick check directly inside Snowflake without running Python:
+
+```sql
+-- Run scripts/monitor_pipeline.sql in Snowflake Worksheet
+-- Each section is clearly labelled — run individual blocks as needed
+
+-- One-shot health dashboard (last section of the file):
+-- Returns: pipe_state, pending_files, stream_has_data,
+--          files_available, files_failed, files_stuck, searches_last_hour
+```
+
+### Manual pipeline interventions
+
+```sql
+-- Force Snowpipe to pick up files already on stage (bypasses SQS)
+ALTER PIPE INTELLIDOC_DB.INTELLIDOC.INTELLIDOC_LANDING_PIPE REFRESH;
+
+-- Trigger routing task immediately (no waiting for 1-minute schedule)
+EXECUTE TASK INTELLIDOC_DB.INTELLIDOC.ROUTING_TASK;
+
+-- Re-process a specific file that failed (reset its status)
+UPDATE INTELLIDOC_DB.INTELLIDOC.DOCUMENT_REGISTRY
+SET PROCESSING_STATUS = 'STAGED', UPDATED_TS = SYSDATE()
+WHERE FILE_ID = '<your-file-id>';
+
+-- Resume all tasks if they were suspended
+ALTER TASK INTELLIDOC_DB.INTELLIDOC.CLASSIFY_TASK RESUME;
+ALTER TASK INTELLIDOC_DB.INTELLIDOC.EMBED_TASK     RESUME;
+ALTER TASK INTELLIDOC_DB.INTELLIDOC.EXTRACT_TASK   RESUME;
+ALTER TASK INTELLIDOC_DB.INTELLIDOC.ROUTING_TASK   RESUME;
 ```
 
 ---
