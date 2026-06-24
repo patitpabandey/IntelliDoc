@@ -1,0 +1,18 @@
+{
+  "file_id": "b602d6b6-a0e7-5013-9033-29b1a95ed898",
+  "file_name": "tax_profile_GB-CUST-00421.csv",
+  "file_format": "CSV",
+  "cbdccollectioncountry": "US",
+  "cbdccollectionlegalentityid": "GB-CUST-00421",
+  "allowed_formats": ["PDF", "XLSX", "CSV"],
+  "Source": "S3",
+  "Destination": "Snowflake",
+  "Accountid": "GB-CUST-00421",
+  "branch_id": "BRANCH-GLOBALBANK",
+  "filehash": "c8a9bc187eb5cb2687ad3681e36f19a5d5a665c0bf9ecdc54839c17583777469",
+  "file_size": 708,
+  "document_type_hint": "TAX_PROFILE",
+  "source_system": "INTELLIDOC",
+  "period": "2024",
+  "client_name": "Apex Pension Fund LLC"
+}

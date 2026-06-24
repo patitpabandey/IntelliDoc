@@ -1,0 +1,22 @@
+# AWS
+boto3>=1.34.0
+botocore>=1.34.0
+moto[s3,dynamodb,sqs,sns]>=4.2.0  # test mocks
+
+# Snowflake
+snowflake-connector-python>=3.7.0
+snowflake-snowpark-python>=1.17.0
+
+# Document parsing (PDF | XLSX | CSV)
+pdfplumber>=0.10.3
+openpyxl>=3.1.2
+reportlab>=4.1.0   # generate sample PDFs
+chardet>=5.2.0     # CSV encoding detection fallback
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0

@@ -1,0 +1,6 @@
+Income_ID,Account_No,Security_Name,CUSIP,Income_Type,Ex_Date,Pay_Date,Gross_Amount_USD,Tax_Withheld_USD,Net_Amount_USD,Processing_Fee_USD
+INC-001,GB-CUST-00421,Apple Inc.,037833100,Cash Dividend,2024-02-13,2024-02-15,"5,200.00",780.00,"4,420.00",52.00
+INC-002,GB-CUST-00421,Exxon Mobil Corp.,30231G102,Cash Dividend,2024-03-08,2024-03-12,"3,825.00",573.75,"3,251.25",38.25
+INC-003,GB-CUST-00421,Johnson & Johnson,478160104,Special Dividend,2024-02-26,2024-02-28,"9,600.00","1,440.00","8,160.00",96.00
+INC-004,GB-CUST-00421,Berkshire Hathaway,084670702,Interest Income,2024-03-18,2024-03-20,"1,875.00",281.25,"1,593.75",18.75
+INC-005,GB-CUST-00421,Microsoft Corp.,594918104,Cash Dividend,2024-01-20,2024-01-22,"4,500.00",675.00,"3,825.00",45.00

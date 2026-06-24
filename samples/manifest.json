@@ -1,0 +1,218 @@
+[
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_billing_invoice_INV-2024-GB-2824.pdf",
+    "type": "CUSTODY_BILLING_INVOICE",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_portfolio_valuation_VAL-2024-GB-9935.pdf",
+    "type": "PORTFOLIO_VALUATION",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_custody_tax_summary_TAX-CUST-2023-6574.pdf",
+    "type": "CUSTODY_TAX_SUMMARY",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_tax_reclaim_RECLAIM-2024-2291.pdf",
+    "type": "TAX_RECLAIM_APPLICATION",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_corporate_actions_billing_CA-BILL-2024-2654.pdf",
+    "type": "CORPORATE_ACTIONS_BILLING",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_billing_transactions_Q1_2024.csv",
+    "type": "TRANSACTION_REPORT",
+    "client": "CLIENT_APEX",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_billing_surcharges_Q1_2024.csv",
+    "type": "SURCHARGE_STATEMENT",
+    "client": "CLIENT_APEX",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_billing_corporate_actions_income_Q1_2024.csv",
+    "type": "INCOME_REPORT",
+    "client": "CLIENT_APEX",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_apex_tax_profile_GB-CUST-00421.csv",
+    "type": "TAX_PROFILE",
+    "client": "CLIENT_APEX",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_billing_invoice_INV-2024-GB-7118.pdf",
+    "type": "CUSTODY_BILLING_INVOICE",
+    "client": "CLIENT_MERIDIAN",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_portfolio_valuation_VAL-2024-GB-1344.pdf",
+    "type": "PORTFOLIO_VALUATION",
+    "client": "CLIENT_MERIDIAN",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_custody_tax_summary_TAX-CUST-2023-7669.pdf",
+    "type": "CUSTODY_TAX_SUMMARY",
+    "client": "CLIENT_MERIDIAN",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_tax_reclaim_RECLAIM-2024-2790.pdf",
+    "type": "TAX_RECLAIM_APPLICATION",
+    "client": "CLIENT_MERIDIAN",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_corporate_actions_billing_CA-BILL-2024-5092.pdf",
+    "type": "CORPORATE_ACTIONS_BILLING",
+    "client": "CLIENT_MERIDIAN",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_billing_transactions_Q1_2024.csv",
+    "type": "TRANSACTION_REPORT",
+    "client": "CLIENT_MERIDIAN",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_billing_surcharges_Q1_2024.csv",
+    "type": "SURCHARGE_STATEMENT",
+    "client": "CLIENT_MERIDIAN",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_billing_corporate_actions_income_Q1_2024.csv",
+    "type": "INCOME_REPORT",
+    "client": "CLIENT_MERIDIAN",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_meridian_tax_profile_GB-CUST-00532.csv",
+    "type": "TAX_PROFILE",
+    "client": "CLIENT_MERIDIAN",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_billing_invoice_INV-2024-GB-1590.pdf",
+    "type": "CUSTODY_BILLING_INVOICE",
+    "client": "CLIENT_SUMMIT",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_portfolio_valuation_VAL-2024-GB-6974.pdf",
+    "type": "PORTFOLIO_VALUATION",
+    "client": "CLIENT_SUMMIT",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_custody_tax_summary_TAX-CUST-2023-5065.pdf",
+    "type": "CUSTODY_TAX_SUMMARY",
+    "client": "CLIENT_SUMMIT",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_tax_reclaim_RECLAIM-2024-4164.pdf",
+    "type": "TAX_RECLAIM_APPLICATION",
+    "client": "CLIENT_SUMMIT",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_corporate_actions_billing_CA-BILL-2024-6425.pdf",
+    "type": "CORPORATE_ACTIONS_BILLING",
+    "client": "CLIENT_SUMMIT",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_billing_transactions_Q1_2024.csv",
+    "type": "TRANSACTION_REPORT",
+    "client": "CLIENT_SUMMIT",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_billing_surcharges_Q1_2024.csv",
+    "type": "SURCHARGE_STATEMENT",
+    "client": "CLIENT_SUMMIT",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_billing_corporate_actions_income_Q1_2024.csv",
+    "type": "INCOME_REPORT",
+    "client": "CLIENT_SUMMIT",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\samples\\client_summit_tax_profile_GB-CUST-00615.csv",
+    "type": "TAX_PROFILE",
+    "client": "CLIENT_SUMMIT",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\billing_corporate_actions_income_Q1_2024.csv",
+    "type": "INCOME_REPORT",
+    "client": "CLIENT_APEX",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\billing_invoice_INV-2024-GB-0892.pdf",
+    "type": "CUSTODY_BILLING_INVOICE",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\billing_surcharges_Q1_2024.csv",
+    "type": "SURCHARGE_STATEMENT",
+    "client": "CLIENT_APEX",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\billing_transactions_Q1_2024.csv",
+    "type": "TRANSACTION_REPORT",
+    "client": "CLIENT_APEX",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\billing_valuation_VAL-2024-GB-0331.pdf",
+    "type": "PORTFOLIO_VALUATION",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\custody_billing_corporate_actions_Q1_2024.pdf",
+    "type": "CORPORATE_ACTIONS_BILLING",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\custody_tax_document_TAX-CUST-2024-0001.pdf",
+    "type": "CUSTODY_TAX_SUMMARY",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\tax_profile_GB-CUST-00421.csv",
+    "type": "TAX_PROFILE",
+    "client": "CLIENT_APEX",
+    "format": "CSV"
+  },
+  {
+    "path": "c:\\Users\\DEYPA\\Desktop\\DataEngineering\\Projects\\Unstructure Data Load\\IntelliDoc\\Source Files\\tax_reclaim_RECLAIM-2024-0042.pdf",
+    "type": "TAX_RECLAIM_APPLICATION",
+    "client": "CLIENT_APEX",
+    "format": "PDF"
+  }
+]

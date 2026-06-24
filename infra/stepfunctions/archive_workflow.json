@@ -1,0 +1,152 @@
+{
+  "Comment": "IntelliDoc archive workflow. Triggered manually or on a schedule. Moves AVAILABLE documents older than the retention threshold to ARCHIVED status and optionally initiates S3 Glacier retrieval for read-back.",
+  "StartAt": "FindDocumentsToArchive",
+  "States": {
+
+    "FindDocumentsToArchive": {
+      "Type": "Task",
+      "Comment": "Queries Snowflake for AVAILABLE documents older than 2 years. Returns a list of file_ids.",
+      "Resource": "arn:aws:lambda:${AWS_REGION}:${ACCOUNT_ID}:function:intellidoc-find-archive-candidates",
+      "Parameters": {
+        "retention_days": 730,
+        "status_filter": "AVAILABLE"
+      },
+      "ResultPath": "$.candidates",
+      "Next": "AreThereDocuments",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "NotifyFailure",
+          "ResultPath": "$.error"
+        }
+      ]
+    },
+
+    "AreThereDocuments": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.candidates.count",
+          "NumericGreaterThan": 0,
+          "Next": "ArchiveDocumentsMap"
+        }
+      ],
+      "Default": "ArchiveComplete"
+    },
+
+    "ArchiveDocumentsMap": {
+      "Type": "Map",
+      "Comment": "Processes each candidate document in parallel (up to 10 concurrent).",
+      "ItemsPath": "$.candidates.file_ids",
+      "MaxConcurrency": 10,
+      "Iterator": {
+        "StartAt": "MarkArchivingInSnowflake",
+        "States": {
+
+          "MarkArchivingInSnowflake": {
+            "Type": "Task",
+            "Comment": "Sets PROCESSING_STATUS = ARCHIVING in DOCUMENT_REGISTRY and writes audit row.",
+            "Resource": "arn:aws:lambda:${AWS_REGION}:${ACCOUNT_ID}:function:intellidoc-update-status",
+            "Parameters": {
+              "file_id.$": "$",
+              "new_status": "ARCHIVING",
+              "step_name": "ARCHIVE"
+            },
+            "ResultPath": "$.status_update",
+            "Next": "MoveToGlacier",
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "Next": "DocumentArchiveFailed",
+                "ResultPath": "$.error"
+              }
+            ]
+          },
+
+          "MoveToGlacier": {
+            "Type": "Task",
+            "Comment": "Copies the file from S3 STANDARD to S3 GLACIER_IR storage class using S3 Object Copy with StorageClass override.",
+            "Resource": "arn:aws:lambda:${AWS_REGION}:${ACCOUNT_ID}:function:intellidoc-s3-glacier-move",
+            "Parameters": {
+              "file_id.$": "$",
+              "source_prefix": "validated/",
+              "storage_class": "GLACIER_IR"
+            },
+            "ResultPath": "$.glacier_result",
+            "Next": "MarkArchivedInSnowflake",
+            "Retry": [
+              {
+                "ErrorEquals": ["Lambda.ServiceException", "Lambda.TooManyRequestsException"],
+                "IntervalSeconds": 10,
+                "MaxAttempts": 3,
+                "BackoffRate": 2.0
+              }
+            ],
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "Next": "DocumentArchiveFailed",
+                "ResultPath": "$.error"
+              }
+            ]
+          },
+
+          "MarkArchivedInSnowflake": {
+            "Type": "Task",
+            "Comment": "Sets PROCESSING_STATUS = ARCHIVED and records glacier_uri in CURRENT_LOCATION.",
+            "Resource": "arn:aws:lambda:${AWS_REGION}:${ACCOUNT_ID}:function:intellidoc-update-status",
+            "Parameters": {
+              "file_id.$": "$",
+              "new_status": "ARCHIVED",
+              "step_name": "ARCHIVE",
+              "location.$": "$.glacier_result.glacier_uri"
+            },
+            "End": true,
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "Next": "DocumentArchiveFailed",
+                "ResultPath": "$.error"
+              }
+            ]
+          },
+
+          "DocumentArchiveFailed": {
+            "Type": "Task",
+            "Comment": "Marks the document FAILED and emits an SNS alert.",
+            "Resource": "arn:aws:lambda:${AWS_REGION}:${ACCOUNT_ID}:function:intellidoc-alert",
+            "Parameters": {
+              "subject": "IntelliDoc archive failed",
+              "file_id.$": "$.file_id",
+              "error.$": "$.error"
+            },
+            "End": true
+          }
+        }
+      },
+      "Next": "ArchiveComplete"
+    },
+
+    "ArchiveComplete": {
+      "Type": "Task",
+      "Comment": "Publishes a summary notification on completion.",
+      "Resource": "arn:aws:lambda:${AWS_REGION}:${ACCOUNT_ID}:function:intellidoc-alert",
+      "Parameters": {
+        "subject": "IntelliDoc archive run complete",
+        "candidates.$": "$.candidates"
+      },
+      "End": true
+    },
+
+    "NotifyFailure": {
+      "Type": "Task",
+      "Comment": "Top-level error handler — notifies via SNS if the workflow itself fails.",
+      "Resource": "arn:aws:lambda:${AWS_REGION}:${ACCOUNT_ID}:function:intellidoc-alert",
+      "Parameters": {
+        "subject": "IntelliDoc archive workflow FAILED",
+        "error.$": "$.error"
+      },
+      "End": true
+    }
+  }
+}

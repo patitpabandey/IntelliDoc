@@ -1,0 +1,7 @@
+Income_ID,Account_No,Security_Name,CUSIP,Income_Type,Ex_Date,Pay_Date,Gross_Amount_USD,Tax_Withheld_USD,Net_Amount_USD,Processing_Fee_USD
+INC-001,GB-CUST-00532,Berkshire Hathaway,084670702,Special Dividend,2024-01-13,2024-01-16,"3,894.93",0.00,"3,894.93",38.95
+INC-002,GB-CUST-00532,Amazon.com Inc.,023135106,Interest Income,2024-03-10,2024-03-13,"6,891.02",0.00,"6,891.02",68.91
+INC-003,GB-CUST-00532,Apple Inc.,037833100,Cash Dividend,2024-03-12,2024-03-16,"2,284.54",0.00,"2,284.54",22.85
+INC-004,GB-CUST-00532,Microsoft Corp.,594918104,Special Dividend,2024-02-05,2024-02-07,"8,054.51","1,208.18","6,846.33",80.55
+INC-005,GB-CUST-00532,Exxon Mobil Corp.,30231G102,Interest Income,2024-02-07,2024-02-12,"7,498.17","1,124.73","6,373.44",74.98
+INC-006,GB-CUST-00532,Alphabet Inc.,02079K305,Interest Income,2024-01-06,2024-01-08,"9,183.39","1,377.51","7,805.88",91.83

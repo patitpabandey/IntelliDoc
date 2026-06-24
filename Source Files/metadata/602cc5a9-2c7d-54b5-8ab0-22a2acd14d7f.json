@@ -1,0 +1,18 @@
+{
+  "file_id": "602cc5a9-2c7d-54b5-8ab0-22a2acd14d7f",
+  "file_name": "billing_invoice_INV-2024-GB-0892.pdf",
+  "file_format": "PDF",
+  "cbdccollectioncountry": "US",
+  "cbdccollectionlegalentityid": "GB-CUST-00421",
+  "allowed_formats": ["PDF", "XLSX", "CSV"],
+  "Source": "S3",
+  "Destination": "Snowflake",
+  "Accountid": "GB-CUST-00421",
+  "branch_id": "BRANCH-GLOBALBANK",
+  "filehash": "6feb82e7363bdf4de983bcb06f73042e7a5974fb3cc01c468720abbbcafe7755",
+  "file_size": 4031,
+  "document_type_hint": "CUSTODY_BILLING_INVOICE",
+  "source_system": "INTELLIDOC",
+  "period": "Q1 2024",
+  "client_name": "Apex Pension Fund LLC"
+}

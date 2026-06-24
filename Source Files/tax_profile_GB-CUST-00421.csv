@@ -1,0 +1,23 @@
+Field,Value
+Account_No,GB-CUST-00421
+Client_Name,Apex Pension Fund LLC
+Client_Type,Institutional – Qualified Pension Fund
+Country_of_Residence,United States
+Tax_Identification_Number,XX-XXXXXXX
+Tax_Residency,US Domestic
+W8_W9_Form_On_File,W-9
+W8_W9_Expiry,N/A
+FATCA_Status,Participating FFI
+FATCA_GIIN,GBNA-US-00421-FATCA
+CRS_Status,Reportable – US
+Treaty_Country,N/A
+Treaty_Rate_Dividends,N/A – Domestic
+Treaty_Rate_Interest,N/A – Domestic
+Default_WHT_Rate_Dividends,0%
+Default_WHT_Rate_Interest,0%
+Exempt_From_Backup_Withholding,Yes
+QI_Status,Non-QI
+Qualified_Intermediary,No
+Profile_Last_Updated,2024-01-15
+Approved_By,Global Bank Tax Operations
+Next_Review_Date,2025-01-15

@@ -1,0 +1,18 @@
+{
+  "file_id": "853761de-474d-524e-a450-19ca2a234890",
+  "file_name": "billing_corporate_actions_income_Q1_2024.csv",
+  "file_format": "CSV",
+  "cbdccollectioncountry": "US",
+  "cbdccollectionlegalentityid": "GB-CUST-00421",
+  "allowed_formats": ["PDF", "XLSX", "CSV"],
+  "Source": "S3",
+  "Destination": "Snowflake",
+  "Accountid": "GB-CUST-00421",
+  "branch_id": "BRANCH-GLOBALBANK",
+  "filehash": "43a74e752586e54930daa0dd1408c7b35569ce152ef0835492c966d73e087db7",
+  "file_size": 750,
+  "document_type_hint": "INCOME_REPORT",
+  "source_system": "INTELLIDOC",
+  "period": "Q1 2024",
+  "client_name": "Apex Pension Fund LLC"
+}

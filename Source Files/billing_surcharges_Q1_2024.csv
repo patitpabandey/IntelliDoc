@@ -1,0 +1,6 @@
+Surcharge_ID,Account_No,Invoice_Ref,Surcharge_Type,Description,Applied_Date,Base_Amount_USD,Surcharge_Rate,Surcharge_Amount_USD
+SUR-001,GB-CUST-00421,INV-2024-GB-0892,Late Settlement,Settlement delay >2 days: AAPL trade 2024-01-18,2024-01-22,15.00,200%,30.00
+SUR-002,GB-CUST-00421,INV-2024-GB-0892,Currency Conversion,USD/EUR conversion fee on dividend proceeds,2024-02-15,"4,420.00",0.25%,11.05
+SUR-003,GB-CUST-00421,INV-2024-GB-0892,Custody Minimum,Below minimum asset threshold Feb 2024,2024-02-29,0.00,flat,150.00
+SUR-004,GB-CUST-00421,INV-2024-GB-0892,Ad Hoc Reporting,Custom performance report requested 2024-03-05,2024-03-05,0.00,flat,75.00
+SUR-005,GB-CUST-00421,INV-2024-GB-0892,Regulatory Filing,SEC Form N-PX filing assistance,2024-03-15,0.00,flat,58.25

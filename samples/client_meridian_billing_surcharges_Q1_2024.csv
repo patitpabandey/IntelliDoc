@@ -1,0 +1,5 @@
+Surcharge_ID,Account_No,Invoice_Ref,Surcharge_Type,Description,Applied_Date,Base_Amount_USD,Surcharge_Rate,Surcharge_Amount_USD
+SUR-001,GB-CUST-00532,INV-2024-GB-9288,Currency Conversion,USD/EUR conversion fee on proceeds — 2024-02-14,2024-02-14,83.08,0.25%,0.21
+SUR-002,GB-CUST-00532,INV-2024-GB-9288,Custody Minimum,Below minimum asset threshold — 2024-03-14,2024-03-14,0.00,flat,150.00
+SUR-003,GB-CUST-00532,INV-2024-GB-9288,Late Settlement,Settlement delay >2 days — 2024-03-25,2024-03-25,0.00,200%,15.00
+SUR-004,GB-CUST-00532,INV-2024-GB-9288,Ad Hoc Reporting,Custom performance report requested — 2024-03-05,2024-03-05,0.00,flat,75.00

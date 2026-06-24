@@ -1,0 +1,18 @@
+{
+  "file_id": "193e58b3-4b34-504b-ae1b-2d44bbda9038",
+  "file_name": "tax_reclaim_RECLAIM-2024-0042.pdf",
+  "file_format": "PDF",
+  "cbdccollectioncountry": "US",
+  "cbdccollectionlegalentityid": "GB-CUST-00421",
+  "allowed_formats": ["PDF", "XLSX", "CSV"],
+  "Source": "S3",
+  "Destination": "Snowflake",
+  "Accountid": "GB-CUST-00421",
+  "branch_id": "BRANCH-GLOBALBANK",
+  "filehash": "574cc99a73dbadb4cc2d384c101b5624dbca00fdf207fc2732721f2dd4400558",
+  "file_size": 4653,
+  "document_type_hint": "TAX_RECLAIM_APPLICATION",
+  "source_system": "INTELLIDOC",
+  "period": "Q1 2024",
+  "client_name": "Apex Pension Fund LLC"
+}

@@ -1,0 +1,18 @@
+{
+  "file_id": "ad00d2b0-73e7-53fb-b8c6-28c43d7ddb58",
+  "file_name": "custody_billing_corporate_actions_Q1_2024.pdf",
+  "file_format": "PDF",
+  "cbdccollectioncountry": "US",
+  "cbdccollectionlegalentityid": "GB-CUST-00421",
+  "allowed_formats": ["PDF", "XLSX", "CSV"],
+  "Source": "S3",
+  "Destination": "Snowflake",
+  "Accountid": "GB-CUST-00421",
+  "branch_id": "BRANCH-GLOBALBANK",
+  "filehash": "841b9b73be795951427290b59aab8904d22ef5ddf1936aed16cfae1e7e740313",
+  "file_size": 3605,
+  "document_type_hint": "CORPORATE_ACTIONS_BILLING",
+  "source_system": "INTELLIDOC",
+  "period": "Q1 2024",
+  "client_name": "Apex Pension Fund LLC"
+}

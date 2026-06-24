@@ -1,0 +1,18 @@
+{
+  "file_id": "0ef16925-d3d2-5913-bf58-1d6535c1063c",
+  "file_name": "billing_surcharges_Q1_2024.csv",
+  "file_format": "CSV",
+  "cbdccollectioncountry": "US",
+  "cbdccollectionlegalentityid": "GB-CUST-00421",
+  "allowed_formats": ["PDF", "XLSX", "CSV"],
+  "Source": "S3",
+  "Destination": "Snowflake",
+  "Accountid": "GB-CUST-00421",
+  "branch_id": "BRANCH-GLOBALBANK",
+  "filehash": "68721a603d7a922c1cb5cbed479fd58ec12d1be2844322495d64ef7a8d6907a8",
+  "file_size": 770,
+  "document_type_hint": "SURCHARGE_STATEMENT",
+  "source_system": "INTELLIDOC",
+  "period": "Q1 2024",
+  "client_name": "Apex Pension Fund LLC"
+}

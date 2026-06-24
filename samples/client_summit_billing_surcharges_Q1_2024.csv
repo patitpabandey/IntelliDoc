@@ -1,0 +1,6 @@
+Surcharge_ID,Account_No,Invoice_Ref,Surcharge_Type,Description,Applied_Date,Base_Amount_USD,Surcharge_Rate,Surcharge_Amount_USD
+SUR-001,GB-CUST-00615,INV-2024-GB-8043,Regulatory Filing,SEC Form N-PX filing assistance — 2024-03-11,2024-03-11,0.00,flat,58.25
+SUR-002,GB-CUST-00615,INV-2024-GB-8043,Custody Minimum,Below minimum asset threshold — 2024-03-20,2024-03-20,0.00,flat,150.00
+SUR-003,GB-CUST-00615,INV-2024-GB-8043,Currency Conversion,USD/EUR conversion fee on proceeds — 2024-03-10,2024-03-10,331.13,0.25%,0.83
+SUR-004,GB-CUST-00615,INV-2024-GB-8043,Ad Hoc Reporting,Custom performance report requested — 2024-02-21,2024-02-21,0.00,flat,75.00
+SUR-005,GB-CUST-00615,INV-2024-GB-8043,Late Settlement,Settlement delay >2 days — 2024-03-25,2024-03-25,0.00,200%,15.00

@@ -1,0 +1,18 @@
+{
+  "file_id": "55395c2f-892d-5acf-a140-233d975a6bea",
+  "file_name": "billing_valuation_VAL-2024-GB-0331.pdf",
+  "file_format": "PDF",
+  "cbdccollectioncountry": "US",
+  "cbdccollectionlegalentityid": "GB-CUST-00421",
+  "allowed_formats": ["PDF", "XLSX", "CSV"],
+  "Source": "S3",
+  "Destination": "Snowflake",
+  "Accountid": "GB-CUST-00421",
+  "branch_id": "BRANCH-GLOBALBANK",
+  "filehash": "9e394196f259b09a8aa1505825bf0eb2a2e7bd46a30418d52410d109a5ff9e66",
+  "file_size": 3890,
+  "document_type_hint": "PORTFOLIO_VALUATION",
+  "source_system": "INTELLIDOC",
+  "period": "Q1 2024",
+  "client_name": "Apex Pension Fund LLC"
+}

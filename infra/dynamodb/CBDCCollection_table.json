@@ -1,0 +1,78 @@
+{
+  "_comment": "DynamoDB CBDCCollection table. PK = cbdccollectioncountry, SK = cbdccollectionlegalentityid. Validation checks country + legalentityid + destination. Deploy with: aws dynamodb create-table --cli-input-json file://client_registry_table.json",
+
+  "TableName": "CBDCCollection",
+  "BillingMode": "PAY_PER_REQUEST",
+  "KeySchema": [
+    { "AttributeName": "cbdccollectioncountry",       "KeyType": "HASH"  },
+    { "AttributeName": "cbdccollectionlegalentityid", "KeyType": "RANGE" }
+  ],
+  "AttributeDefinitions": [
+    { "AttributeName": "cbdccollectioncountry",       "AttributeType": "S" },
+    { "AttributeName": "cbdccollectionlegalentityid", "AttributeType": "S" }
+  ],
+  "Tags": [
+    { "Key": "project",     "Value": "intellidoc" },
+    { "Key": "environment", "Value": "production" },
+    { "Key": "custodian",   "Value": "global-bank-na" }
+  ],
+  "PointInTimeRecoverySpecification": {
+    "PointInTimeRecoveryEnabled": true
+  },
+  "SSESpecification": {
+    "Enabled": true,
+    "SSEType": "KMS"
+  },
+
+  "_sample_items": [
+    {
+      "_comment": "Apex Pension Fund LLC — US domiciled, account GB-CUST-00421",
+      "cbdccollectioncountry":       { "S": "US" },
+      "cbdccollectionlegalentityid": { "S": "GB-CUST-00421" },
+      "allowed_formats":             { "SS": ["PDF", "XLSX", "CSV"] },
+      "source":                      { "S": "S3" },
+      "destination":                 { "S": "Snowflake" },
+      "active_flag":                 { "BOOL": true },
+      "client_name":                 { "S": "Apex Pension Fund LLC" },
+      "client_type":                 { "S": "Institutional – Qualified Pension Fund" }
+    },
+    {
+      "_comment": "Meridian Asset Management — US domiciled, account GB-CUST-00532",
+      "cbdccollectioncountry":       { "S": "US" },
+      "cbdccollectionlegalentityid": { "S": "GB-CUST-00532" },
+      "allowed_formats":             { "SS": ["PDF", "XLSX", "CSV"] },
+      "source":                      { "S": "S3" },
+      "destination":                 { "S": "Snowflake" },
+      "active_flag":                 { "BOOL": true },
+      "client_name":                 { "S": "Meridian Asset Management" },
+      "client_type":                 { "S": "Institutional – Investment Manager" }
+    },
+    {
+      "_comment": "Summit Endowment Fund — US domiciled, account GB-CUST-00615",
+      "cbdccollectioncountry":       { "S": "US" },
+      "cbdccollectionlegalentityid": { "S": "GB-CUST-00615" },
+      "allowed_formats":             { "SS": ["PDF", "XLSX", "CSV"] },
+      "source":                      { "S": "S3" },
+      "destination":                 { "S": "Snowflake" },
+      "active_flag":                 { "BOOL": true },
+      "client_name":                 { "S": "Summit Endowment Fund" },
+      "client_type":                 { "S": "Institutional – Endowment" }
+    },
+    {
+      "_comment": "Inactive client — for quarantine testing",
+      "cbdccollectioncountry":       { "S": "US" },
+      "cbdccollectionlegalentityid": { "S": "GB-CUST-99999" },
+      "allowed_formats":             { "SS": ["PDF"] },
+      "source":                      { "S": "S3" },
+      "destination":                 { "S": "Snowflake" },
+      "active_flag":                 { "BOOL": false },
+      "client_name":                 { "S": "Deactivated Client" }
+    }
+  ],
+
+  "_seed_commands": [
+    "aws dynamodb put-item --table-name CBDCCollection --item '{\"cbdccollectioncountry\":{\"S\":\"US\"},\"cbdccollectionlegalentityid\":{\"S\":\"GB-CUST-00421\"},\"allowed_formats\":{\"SS\":[\"PDF\",\"XLSX\",\"CSV\"]},\"source\":{\"S\":\"S3\"},\"destination\":{\"S\":\"Snowflake\"},\"active_flag\":{\"BOOL\":true},\"client_name\":{\"S\":\"Apex Pension Fund LLC\"}}'",
+    "aws dynamodb put-item --table-name CBDCCollection --item '{\"cbdccollectioncountry\":{\"S\":\"US\"},\"cbdccollectionlegalentityid\":{\"S\":\"GB-CUST-00532\"},\"allowed_formats\":{\"SS\":[\"PDF\",\"XLSX\",\"CSV\"]},\"source\":{\"S\":\"S3\"},\"destination\":{\"S\":\"Snowflake\"},\"active_flag\":{\"BOOL\":true},\"client_name\":{\"S\":\"Meridian Asset Management\"}}'",
+    "aws dynamodb put-item --table-name CBDCCollection --item '{\"cbdccollectioncountry\":{\"S\":\"US\"},\"cbdccollectionlegalentityid\":{\"S\":\"GB-CUST-00615\"},\"allowed_formats\":{\"SS\":[\"PDF\",\"XLSX\",\"CSV\"]},\"source\":{\"S\":\"S3\"},\"destination\":{\"S\":\"Snowflake\"},\"active_flag\":{\"BOOL\":true},\"client_name\":{\"S\":\"Summit Endowment Fund\"}}'"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "file_id": "1e1f63f4-a940-5736-ad92-1e2bb9549c07",
+  "file_name": "custody_tax_document_TAX-CUST-2024-0001.pdf",
+  "file_format": "PDF",
+  "cbdccollectioncountry": "US",
+  "cbdccollectionlegalentityid": "GB-CUST-00421",
+  "allowed_formats": ["PDF", "XLSX", "CSV"],
+  "Source": "S3",
+  "Destination": "Snowflake",
+  "Accountid": "GB-CUST-00421",
+  "branch_id": "BRANCH-GLOBALBANK",
+  "filehash": "dbf99f118c92352ecd7f776e111462266df84beea5f1a8afd8a55ca20357a8a7",
+  "file_size": 3785,
+  "document_type_hint": "CUSTODY_TAX_SUMMARY",
+  "source_system": "INTELLIDOC",
+  "period": "Tax Year 2023",
+  "client_name": "Apex Pension Fund LLC"
+}
