@@ -6,9 +6,9 @@ Validation flow per message:
   1. Parse S3 key from SQS/EventBridge envelope
   2. Fetch companion metadata JSON from s3://bucket/metadata/<file_id>.json
   3. Validate file format (PDF | XLSX | CSV) and SHA-256 integrity (filehash)
-  4. Look up DynamoDB CBDCCollection:
-       PK = cbdccollectioncountry   (from metadata)
-       SK = cbdccollectionlegalentityid (from metadata)
+  4. Look up DynamoDB CustodyCollectionRegistry:
+       PK = custody_country   (from metadata)
+       SK = legal_entity_id   (from metadata)
        Validate: active_flag=True, destination matches, file_format in allowed_formats
   5a. Valid  → copy to /validated/<Accountid>/<filename>
               → insert DOCUMENT_REGISTRY (ACCOUNT_ID, BRANCH_ID from metadata)
@@ -44,7 +44,7 @@ INCOMING_PREFIX     = os.environ.get("S3_INCOMING_PREFIX",  "incoming/")
 METADATA_PREFIX     = os.environ.get("S3_METADATA_PREFIX",  "metadata/")
 VALIDATED_PREFIX    = os.environ.get("S3_VALIDATED_PREFIX", "validated/")
 QUARANTINE_PREFIX   = os.environ.get("S3_QUARANTINE_PREFIX","quarantine/")
-DYNAMODB_TABLE      = os.environ.get("DYNAMODB_TABLE_NAME", "CBDCCollection")
+DYNAMODB_TABLE      = os.environ.get("DYNAMODB_TABLE_NAME", "CustodyCollectionRegistry")
 SNS_TOPIC_ARN       = os.environ.get("SNS_ALERT_TOPIC_ARN", "")
 AWS_REGION          = os.environ.get("AWS_REGION", "us-east-1")
 
@@ -103,17 +103,17 @@ def fetch_metadata(file_id: str) -> Optional[dict]:
         raise
 
 
-def lookup_cbdc_collection(country: str, legal_entity_id: str) -> Optional[dict]:
+def lookup_custody_registry(country: str, legal_entity_id: str) -> Optional[dict]:
     """
-    Look up the CBDCCollection table using:
-      PK = cbdccollectioncountry
-      SK = cbdccollectionlegalentityid
+    Look up the CustodyCollectionRegistry table using:
+      PK = custody_country
+      SK = legal_entity_id
     Returns the DynamoDB item or None.
     """
     table = _get_dynamo().Table(DYNAMODB_TABLE)
     resp = table.get_item(Key={
-        "cbdccollectioncountry":       country,
-        "cbdccollectionlegalentityid": legal_entity_id,
+        "custody_country": country,
+        "legal_entity_id": legal_entity_id,
     })
     return resp.get("Item")
 
@@ -145,13 +145,14 @@ def insert_document_registry(meta: dict, status: str, location: str):
     """
     Insert or update DOCUMENT_REGISTRY.
     Uses Accountid + branch_id from metadata.
-    CLIENT_ID is intentionally left NULL here; the routing stored proc
+    CLIENT_ACCOUNT_ID is intentionally left NULL here — the routing stored proc
     resolves it from CLIENT_MAPPING (ACCOUNT_ID + BRANCH_ID) at routing time.
+    DynamoDB holds no client information; client identity lives only in Snowflake.
     """
     sql_check = "SELECT PROCESSING_STATUS FROM DOCUMENT_REGISTRY WHERE FILE_ID = %s"
     sql_insert = """
         INSERT INTO DOCUMENT_REGISTRY
-            (FILE_ID, FILE_NAME, FILE_FORMAT, CLIENT_ID, ACCOUNT_ID, BRANCH_ID,
+            (FILE_ID, FILE_NAME, FILE_FORMAT, CLIENT_ACCOUNT_ID, ACCOUNT_ID, BRANCH_ID,
              FILE_HASH, FILE_SIZE, CURRENT_LOCATION, PROCESSING_STATUS, SOURCE_SYSTEM,
              CREATED_TS, UPDATED_TS)
         SELECT %s,%s,%s,NULL,%s,%s,%s,%s,%s,%s,%s,SYSDATE(),SYSDATE()
@@ -271,23 +272,23 @@ def validate_document(s3_key: str) -> dict:
             "hash_mismatch"
         )
 
-    # 4. DynamoDB CBDCCollection lookup
-    #    Keys: cbdccollectioncountry + cbdccollectionlegalentityid
-    country        = meta.get("cbdccollectioncountry", "")
-    legal_entity   = meta.get("cbdccollectionlegalentityid", "")
+    # 4. DynamoDB CustodyCollectionRegistry lookup
+    #    Keys: custody_country + legal_entity_id
+    country        = meta.get("custody_country", "")
+    legal_entity   = meta.get("legal_entity_id", "")
     meta_dest      = meta.get("Destination", meta.get("destination", ""))
 
     if not country or not legal_entity:
         return _quarantine(
-            "Missing cbdccollectioncountry or cbdccollectionlegalentityid in metadata",
+            "Missing custody_country or legal_entity_id in metadata",
             "bad_metadata"
         )
 
-    registry_item = lookup_cbdc_collection(country, legal_entity)
+    registry_item = lookup_custody_registry(country, legal_entity)
 
     if not registry_item:
         return _quarantine(
-            f"Not found in CBDCCollection: country={country}, legalentityid={legal_entity}",
+            f"Not found in CustodyCollectionRegistry: country={country}, legal_entity_id={legal_entity}",
             "unknown_collection"
         )
 
@@ -302,7 +303,7 @@ def validate_document(s3_key: str) -> dict:
     # 4b. Validate active
     if not registry_item.get("active_flag", False):
         return _quarantine(
-            f"CBDCCollection entry inactive: {country}/{legal_entity}",
+            f"CustodyCollectionRegistry entry inactive: {country}/{legal_entity}",
             "inactive_collection"
         )
 
@@ -399,7 +400,7 @@ if __name__ == "__main__":
 
     os.environ.update({
         "S3_BUCKET_NAME":        "test-intellidoc",
-        "DYNAMODB_TABLE_NAME":   "CBDCCollection",
+        "DYNAMODB_TABLE_NAME":   "CustodyCollectionRegistry",
         "SNS_ALERT_TOPIC_ARN":   "arn:aws:sns:us-east-1:123456789012:test",
         "AWS_DEFAULT_REGION":    "us-east-1",
         "AWS_ACCESS_KEY_ID":     "testing",
@@ -430,20 +431,20 @@ if __name__ == "__main__":
         s3.create_bucket(Bucket=BUCKET)
         sns.create_topic(Name="test")
         ddb.create_table(
-            TableName="CBDCCollection",
+            TableName="CustodyCollectionRegistry",
             BillingMode="PAY_PER_REQUEST",
             KeySchema=[
-                {"AttributeName": "cbdccollectioncountry",       "KeyType": "HASH"},
-                {"AttributeName": "cbdccollectionlegalentityid", "KeyType": "RANGE"},
+                {"AttributeName": "custody_country", "KeyType": "HASH"},
+                {"AttributeName": "legal_entity_id", "KeyType": "RANGE"},
             ],
             AttributeDefinitions=[
-                {"AttributeName": "cbdccollectioncountry",       "AttributeType": "S"},
-                {"AttributeName": "cbdccollectionlegalentityid", "AttributeType": "S"},
+                {"AttributeName": "custody_country", "AttributeType": "S"},
+                {"AttributeName": "legal_entity_id", "AttributeType": "S"},
             ],
         )
-        ddb.Table("CBDCCollection").put_item(Item={
-            "cbdccollectioncountry":       "US",
-            "cbdccollectionlegalentityid": "GB-CUST-00421",
+        ddb.Table("CustodyCollectionRegistry").put_item(Item={
+            "custody_country": "US",
+            "legal_entity_id": "GB-CUST-00421",
             "allowed_formats": {"PDF", "XLSX", "CSV"},
             "source": "S3", "destination": "Snowflake", "active_flag": True,
         })
@@ -452,8 +453,8 @@ if __name__ == "__main__":
         s3.put_object(Bucket=BUCKET, Key=incoming_key, Body=FILE_CONTENT)
         meta = {
             "file_id": FILE_ID, "file_name": FILE_NAME, "file_format": "PDF",
-            "cbdccollectioncountry": "US",
-            "cbdccollectionlegalentityid": "GB-CUST-00421",
+            "custody_country": "US",
+            "legal_entity_id": "GB-CUST-00421",
             "Destination": "Snowflake", "allowed_formats": ["PDF","XLSX","CSV"],
             "Accountid": "GB-CUST-00421", "branch_id": "BRANCH-GLOBALBANK",
             "filehash": FILE_HASH, "file_size": len(FILE_CONTENT),

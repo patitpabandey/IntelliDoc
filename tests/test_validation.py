@@ -1,8 +1,8 @@
 """
 test_validation.py
 Unit tests for the Lambda validation handler.
-Domain: Global Bank N.A. — validation via DynamoDB CBDCCollection
-  PK = cbdccollectioncountry, SK = cbdccollectionlegalentityid
+Domain: Global Bank N.A. — validation via DynamoDB CustodyCollectionRegistry
+  PK = custody_country, SK = legal_entity_id
   Also validates: destination, active_flag, allowed_formats, SHA-256 (filehash)
 Uses moto to mock AWS — no live credentials needed.
 """
@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "infra" / "lambda"))
 
 os.environ.update({
     "S3_BUCKET_NAME":        "test-intellidoc",
-    "DYNAMODB_TABLE_NAME":   "CBDCCollection",
+    "DYNAMODB_TABLE_NAME":   "CustodyCollectionRegistry",
     "SNS_ALERT_TOPIC_ARN":   "arn:aws:sns:us-east-1:123456789012:test",
     "AWS_DEFAULT_REGION":    "us-east-1",
     "AWS_ACCESS_KEY_ID":     "testing",
@@ -43,13 +43,12 @@ CSV_CONTENT   = b"Txn_ID,Account_No,CUSIP\nTXN-001,GB-CUST-00421,037833100\n"
 FILE_NAME_PDF = "billing_invoice_INV-2024-GB-0892.pdf"
 FILE_NAME_CSV = "billing_transactions_Q1_2024.csv"
 
-# Standard valid CBDC collection entry
-APEX_CBDC = {
-    "cbdccollectioncountry":       "US",
-    "cbdccollectionlegalentityid": "GB-CUST-00421",
+# Standard valid registry entry — no client fields stored in DynamoDB
+APEX_REGISTRY = {
+    "custody_country": "US",
+    "legal_entity_id": "GB-CUST-00421",
     "allowed_formats": {"PDF", "XLSX", "CSV"},
     "source": "S3", "destination": "Snowflake", "active_flag": True,
-    "client_name": "Apex Pension Fund LLC",
 }
 
 
@@ -74,22 +73,22 @@ def mock_sf():
 
 
 def _make_infra(s3, ddb, sns):
-    """Create S3 bucket, CBDCCollection DynamoDB table, SNS topic."""
+    """Create S3 bucket, CustodyCollectionRegistry DynamoDB table, SNS topic."""
     s3.create_bucket(Bucket=BUCKET)
     sns.create_topic(Name="test")
     table = ddb.create_table(
-        TableName="CBDCCollection",
+        TableName="CustodyCollectionRegistry",
         BillingMode="PAY_PER_REQUEST",
         KeySchema=[
-            {"AttributeName": "cbdccollectioncountry",       "KeyType": "HASH"},
-            {"AttributeName": "cbdccollectionlegalentityid", "KeyType": "RANGE"},
+            {"AttributeName": "custody_country", "KeyType": "HASH"},
+            {"AttributeName": "legal_entity_id", "KeyType": "RANGE"},
         ],
         AttributeDefinitions=[
-            {"AttributeName": "cbdccollectioncountry",       "AttributeType": "S"},
-            {"AttributeName": "cbdccollectionlegalentityid", "AttributeType": "S"},
+            {"AttributeName": "custody_country", "AttributeType": "S"},
+            {"AttributeName": "legal_entity_id", "AttributeType": "S"},
         ],
     )
-    table.put_item(Item=APEX_CBDC)
+    table.put_item(Item=APEX_REGISTRY)
     return table
 
 
@@ -97,23 +96,23 @@ def _upload(s3, file_id, filename, content,
             country="US", legal_entity="GB-CUST-00421",
             destination="Snowflake", account_id="GB-CUST-00421",
             extra=None):
-    """Upload a test file + CBDC metadata companion to S3."""
+    """Upload a test file + metadata companion to S3."""
     incoming_key = f"incoming/{account_id}/{filename}"
     s3.put_object(Bucket=BUCKET, Key=incoming_key, Body=content)
     meta = {
-        "file_id":                    file_id,
-        "file_name":                  filename,
-        "file_format":                filename.rsplit(".", 1)[-1].upper(),
-        "cbdccollectioncountry":      country,
-        "cbdccollectionlegalentityid": legal_entity,
-        "allowed_formats":            ["PDF", "XLSX", "CSV"],
-        "Source":                     "S3",
-        "Destination":                destination,
-        "Accountid":                  account_id,
-        "branch_id":                  "BRANCH-GLOBALBANK",
-        "filehash":                   hashlib.sha256(content).hexdigest(),
-        "file_size":                  len(content),
-        "source_system":              "TEST",
+        "file_id":         file_id,
+        "file_name":       filename,
+        "file_format":     filename.rsplit(".", 1)[-1].upper(),
+        "custody_country": country,
+        "legal_entity_id": legal_entity,
+        "allowed_formats": ["PDF", "XLSX", "CSV"],
+        "Source":          "S3",
+        "Destination":     destination,
+        "Accountid":       account_id,
+        "branch_id":       "BRANCH-GLOBALBANK",
+        "filehash":        hashlib.sha256(content).hexdigest(),
+        "file_size":       len(content),
+        "source_system":   "TEST",
     }
     if extra:
         meta.update(extra)
@@ -207,7 +206,7 @@ def test_unknown_cbdc_collection_quarantined(mock_sf):
     result = vh.validate_document(incoming)
 
     assert result["success"] is False
-    assert "collection" in result["reason"].lower() or "CBDCCollection" in result["reason"]
+    assert "collection" in result["reason"].lower() or "CustodyCollectionRegistry" in result["reason"]
 
 
 @mock_aws
@@ -219,9 +218,9 @@ def test_inactive_collection_quarantined(mock_sf):
     _make_infra(s3, ddb, sns)
 
     # Add an inactive collection
-    ddb.Table("CBDCCollection").put_item(Item={
-        "cbdccollectioncountry": "US",
-        "cbdccollectionlegalentityid": "GB-CUST-99999",
+    ddb.Table("CustodyCollectionRegistry").put_item(Item={
+        "custody_country": "US",
+        "legal_entity_id": "GB-CUST-99999",
         "allowed_formats": {"PDF"}, "active_flag": False,
         "source": "S3", "destination": "Snowflake",
     })
@@ -277,8 +276,8 @@ def test_unsupported_format_quarantined(mock_sf):
     s3.put_object(Bucket=BUCKET, Key=f"metadata/{fid}.json",
                   Body=json.dumps({
                       "file_id": fid, "file_name": "doc.txt", "file_format": "TXT",
-                      "cbdccollectioncountry": "US",
-                      "cbdccollectionlegalentityid": "GB-CUST-00421",
+                      "custody_country": "US",
+                      "legal_entity_id": "GB-CUST-00421",
                       "Destination": "Snowflake",
                       "Accountid": "GB-CUST-00421", "branch_id": "BRANCH-GLOBALBANK",
                       "filehash": hashlib.sha256(content).hexdigest(),
@@ -302,9 +301,9 @@ def test_csv_format_not_in_allowed_list_quarantined(mock_sf):
     sns = boto3.client("sns", region_name="us-east-1")
     _make_infra(s3, ddb, sns)
 
-    ddb.Table("CBDCCollection").put_item(Item={
-        "cbdccollectioncountry": "US",
-        "cbdccollectionlegalentityid": "GB-CUST-00700",
+    ddb.Table("CustodyCollectionRegistry").put_item(Item={
+        "custody_country": "US",
+        "legal_entity_id": "GB-CUST-00700",
         "allowed_formats": {"PDF"},
         "source": "S3", "destination": "Snowflake", "active_flag": True,
     })
@@ -326,7 +325,7 @@ def test_csv_format_not_in_allowed_list_quarantined(mock_sf):
 
 @mock_aws
 def test_missing_cbdc_fields_quarantined(mock_sf):
-    """Metadata missing cbdccollectioncountry goes to bad_metadata quarantine."""
+    """Metadata missing custody_country goes to bad_metadata quarantine."""
     s3  = boto3.client("s3", region_name="us-east-1")
     ddb = boto3.resource("dynamodb", region_name="us-east-1")
     sns = boto3.client("sns", region_name="us-east-1")
@@ -336,7 +335,7 @@ def test_missing_cbdc_fields_quarantined(mock_sf):
     content = PDF_CONTENT
     incoming_key = "incoming/GB-CUST-00421/no_cbdc.pdf"
     s3.put_object(Bucket=BUCKET, Key=incoming_key, Body=content)
-    # Metadata deliberately missing cbdccollectioncountry
+    # Metadata deliberately missing custody_country
     s3.put_object(Bucket=BUCKET, Key=f"metadata/{fid}.json",
                   Body=json.dumps({
                       "file_id": fid, "file_name": "no_cbdc.pdf", "file_format": "PDF",
@@ -352,7 +351,7 @@ def test_missing_cbdc_fields_quarantined(mock_sf):
     result = vh.validate_document(incoming_key)
 
     assert result["success"] is False
-    assert "cbdccollection" in result["reason"].lower() or "missing" in result["reason"].lower()
+    assert "custody_country" in result["reason"].lower() or "missing" in result["reason"].lower()
 
 
 @mock_aws

@@ -107,11 +107,11 @@ def _make_mock_session(candidates=None, meta=None, llm_response=None):
     candidates = candidates or FAKE_CANDIDATES
     meta = meta or {
         "FILE_ID": "file-aaa",
-        "FILE_NAME": "client_apex_billing_invoice_INV-2024-GB-0892.pdf",
+        "FILE_NAME": "apex_reader_billing_invoice_INV-2024-GB-0892.pdf",
         "FILE_FORMAT": "PDF",
         "DOCUMENT_TYPE": "CUSTODY_BILLING_INVOICE",
-        "CLIENT_ID": "CLIENT_APEX",
-        "CURRENT_LOCATION": "@APEX_STAGE/client_apex_billing_invoice_INV-2024-GB-0892.pdf",
+        "CLIENT_ACCOUNT_ID": "APEX_READER",
+        "CURRENT_LOCATION": "@APEX_STAGE/apex_reader_billing_invoice_INV-2024-GB-0892.pdf",
         "CLASSIFICATION_CONFIDENCE": "high",
         "DOC_SUMMARY": "Q1 2024 custody services billing invoice INV-2024-GB-0892 issued to Apex Pension Fund LLC.",
     }
@@ -146,10 +146,15 @@ def _make_mock_session(candidates=None, meta=None, llm_response=None):
     audit_df = MagicMock()
     audit_df.collect.return_value = []
 
+    # Mock CURRENT_ACCOUNT() response
+    acct_df = MagicMock()
+    acct_df.collect.return_value = [_row({"CA": "APEX_READER"})]
+
     # Dispatch SQL calls by content
-    call_count = {"n": 0}
     def sql_dispatch(sql_text, params=None):
         sql_text = sql_text.strip().upper()
+        if "CURRENT_ACCOUNT" in sql_text:
+            return acct_df
         if "EMBED_TEXT_1024" in sql_text and "DOCUMENT_CHUNKS" not in sql_text:
             return embed_df
         if "DOCUMENT_CHUNKS" in sql_text:
@@ -167,14 +172,14 @@ def _make_mock_session(candidates=None, meta=None, llm_response=None):
 class TestRunProc:
     def test_happy_path_returns_correct_file(self):
         session, meta = _make_mock_session()
-        result = run(session, "show me the Q1 custody billing invoice for Apex", "CLIENT_APEX")
+        result = run(session, "show me the Q1 custody billing invoice for Apex")
         assert result["file_id"]       == "file-aaa"
         assert result["document_type"] == "CUSTODY_BILLING_INVOICE"
         assert result["confidence"]    == "high"
 
     def test_returns_top5_scores(self):
         session, _ = _make_mock_session()
-        result = run(session, "find an invoice", "CLIENT_ACME")
+        result = run(session, "find an invoice")
         assert "top_scores" in result
         assert len(result["top_scores"]) == len(FAKE_CANDIDATES)
 
@@ -189,30 +194,30 @@ class TestRunProc:
             df.collect.return_value = [MagicMock()]
             return df
         session.sql.side_effect = sql_dispatch
-        result = run(session, "find anything", "CLIENT_SUMMIT")
+        result = run(session, "find anything")
         assert "error" in result
 
     def test_llm_rerank_failure_falls_back_to_top_vector(self):
         session, _ = _make_mock_session(llm_response="not valid json {{{")
-        result = run(session, "custody tax summary 2023", "CLIENT_APEX")
+        result = run(session, "custody tax summary 2023")
         # Should still return a result (fallback)
         assert result["file_id"] is not None
         assert result["confidence"] == "low"
 
-    def test_client_isolation_query_includes_client_id(self):
+    def test_client_isolation_query_includes_client_account_id(self):
         session, _ = _make_mock_session()
-        run(session, "find the Q1 billing invoice", "CLIENT_APEX")
-        # The DOCUMENT_CHUNKS SQL call must include CLIENT_ID as a param
+        run(session, "find the Q1 billing invoice")
+        # The DOCUMENT_CHUNKS SQL call must include CLIENT_ACCOUNT_ID
         chunk_calls = [
             c for c in session.sql.call_args_list
             if "DOCUMENT_CHUNKS" in str(c)
         ]
-        assert any("CLIENT_APEX" in str(c) for c in chunk_calls), \
-            "CLIENT_ID not found in vector search query — isolation broken!"
+        assert any("CLIENT_ACCOUNT_ID" in str(c) for c in chunk_calls), \
+            "CLIENT_ACCOUNT_ID not found in vector search query — isolation broken!"
 
     def test_execution_time_recorded(self):
         session, _ = _make_mock_session()
-        result = run(session, "balance sheet 2023", "CLIENT_ACME")
+        result = run(session, "balance sheet 2023")
         assert "execution_ms" in result
         assert isinstance(result["execution_ms"], int)
         assert result["execution_ms"] >= 0
@@ -229,11 +234,11 @@ class TestResultShape:
 
     def test_all_required_keys_present(self):
         session, _ = _make_mock_session()
-        result = run(session, "show me Q1 invoice", "CLIENT_ACME")
+        result = run(session, "show me Q1 invoice")
         for key in self.REQUIRED_KEYS:
             assert key in result, f"Missing key: '{key}' in result"
 
     def test_confidence_valid_value(self):
         session, _ = _make_mock_session()
-        result = run(session, "anything", "CLIENT_ACME")
+        result = run(session, "anything")
         assert result["confidence"] in ("high", "medium", "low")

@@ -1,0 +1,68 @@
+{
+  "_comment": "DynamoDB CustodyCollectionRegistry table. Validates incoming files by custody country + legal entity + destination. No client information stored here — client routing is handled entirely in Snowflake via CLIENT_MAPPING.",
+
+  "TableName": "CustodyCollectionRegistry",
+  "BillingMode": "PAY_PER_REQUEST",
+  "KeySchema": [
+    { "AttributeName": "custody_country",  "KeyType": "HASH"  },
+    { "AttributeName": "legal_entity_id",  "KeyType": "RANGE" }
+  ],
+  "AttributeDefinitions": [
+    { "AttributeName": "custody_country",  "AttributeType": "S" },
+    { "AttributeName": "legal_entity_id",  "AttributeType": "S" }
+  ],
+  "Tags": [
+    { "Key": "project",     "Value": "intellidoc" },
+    { "Key": "environment", "Value": "production" },
+    { "Key": "custodian",   "Value": "global-bank-na" }
+  ],
+  "PointInTimeRecoverySpecification": {
+    "PointInTimeRecoveryEnabled": true
+  },
+  "SSESpecification": {
+    "Enabled": true,
+    "SSEType": "KMS"
+  },
+
+  "_sample_items": [
+    {
+      "custody_country":  { "S": "US" },
+      "legal_entity_id":  { "S": "GB-CUST-00421" },
+      "allowed_formats":  { "SS": ["PDF", "XLSX", "CSV"] },
+      "source":           { "S": "S3" },
+      "destination":      { "S": "Snowflake" },
+      "active_flag":      { "BOOL": true }
+    },
+    {
+      "custody_country":  { "S": "US" },
+      "legal_entity_id":  { "S": "GB-CUST-00532" },
+      "allowed_formats":  { "SS": ["PDF", "XLSX", "CSV"] },
+      "source":           { "S": "S3" },
+      "destination":      { "S": "Snowflake" },
+      "active_flag":      { "BOOL": true }
+    },
+    {
+      "custody_country":  { "S": "US" },
+      "legal_entity_id":  { "S": "GB-CUST-00615" },
+      "allowed_formats":  { "SS": ["PDF", "XLSX", "CSV"] },
+      "source":           { "S": "S3" },
+      "destination":      { "S": "Snowflake" },
+      "active_flag":      { "BOOL": true }
+    },
+    {
+      "_comment":        "Inactive entry — for quarantine testing",
+      "custody_country": { "S": "US" },
+      "legal_entity_id": { "S": "GB-CUST-99999" },
+      "allowed_formats": { "SS": ["PDF"] },
+      "source":          { "S": "S3" },
+      "destination":     { "S": "Snowflake" },
+      "active_flag":     { "BOOL": false }
+    }
+  ],
+
+  "_seed_commands": [
+    "aws dynamodb put-item --table-name CustodyCollectionRegistry --item '{\"custody_country\":{\"S\":\"US\"},\"legal_entity_id\":{\"S\":\"GB-CUST-00421\"},\"allowed_formats\":{\"SS\":[\"PDF\",\"XLSX\",\"CSV\"]},\"source\":{\"S\":\"S3\"},\"destination\":{\"S\":\"Snowflake\"},\"active_flag\":{\"BOOL\":true}}'",
+    "aws dynamodb put-item --table-name CustodyCollectionRegistry --item '{\"custody_country\":{\"S\":\"US\"},\"legal_entity_id\":{\"S\":\"GB-CUST-00532\"},\"allowed_formats\":{\"SS\":[\"PDF\",\"XLSX\",\"CSV\"]},\"source\":{\"S\":\"S3\"},\"destination\":{\"S\":\"Snowflake\"},\"active_flag\":{\"BOOL\":true}}'",
+    "aws dynamodb put-item --table-name CustodyCollectionRegistry --item '{\"custody_country\":{\"S\":\"US\"},\"legal_entity_id\":{\"S\":\"GB-CUST-00615\"},\"allowed_formats\":{\"SS\":[\"PDF\",\"XLSX\",\"CSV\"]},\"source\":{\"S\":\"S3\"},\"destination\":{\"S\":\"Snowflake\"},\"active_flag\":{\"BOOL\":true}}'"
+  ]
+}

@@ -251,9 +251,9 @@ EventBridge → SQS
     ▼                                         
 Lambda Validation Handler                     
   ├─ SHA-256 integrity check (filehash)       
-  ├─ DynamoDB CBDCCollection lookup           
-  │    PK: cbdccollectioncountry              
-  │    SK: cbdccollectionlegalentityid        
+  ├─ DynamoDB CustodyCollectionRegistry lookup           
+  │    PK: custody_country                    
+  │    SK: legal_entity_id                    
   │    validates: destination + active_flag   
   │    + allowed_formats                      
   ├─ Valid   → S3 /validated/<AccountId>/     
@@ -389,7 +389,7 @@ Data isolation is enforced at every layer:
 
 | Layer | Mechanism |
 |---|---|
-| **Ingestion** | DynamoDB `CBDCCollection` validates `cbdccollectioncountry` + `cbdccollectionlegalentityid` + `destination` before any file enters Snowflake |
+| **Ingestion** | DynamoDB `CustodyCollectionRegistry` validates `custody_country` + `legal_entity_id` + `destination` before any file enters Snowflake |
 | **Storage** | Per-client internal Snowflake stages (`@APEX_STAGE`, `@MERIDIAN_STAGE`) — files physically separated |
 | **Processing** | `CLIENT_ID` written to `DOCUMENT_CHUNKS` at routing time — every embedding carries the owner's identity |
 | **Search** | `WHERE CLIENT_ID = ?` on every vector search — mathematically impossible to return another client's chunks |
@@ -447,7 +447,7 @@ CALL CLIENT_SEARCH(
 |---|---|
 | S3 | Document storage (`/incoming/`, `/validated/`, `/quarantine/`) |
 | Lambda (Python 3.11) | Document validation, SHA-256 integrity, DynamoDB lookup |
-| DynamoDB `CBDCCollection` | Client registry keyed by country + legal entity ID |
+| DynamoDB `CustodyCollectionRegistry` | Client registry keyed by country + legal entity ID |
 | EventBridge + SQS | Event-driven Lambda trigger on S3 PutObject |
 | SNS | Quarantine alerts |
 
@@ -503,7 +503,7 @@ ALTER TASK ROUTING_TASK  RESUME;
 
 ### 4 — Seed DynamoDB and load documents
 ```bash
-aws dynamodb create-table --cli-input-json file://infra/dynamodb/CBDCCollection_table.json
+aws dynamodb create-table --cli-input-json file://infra/dynamodb/CustodyCollectionRegistry_table.json
 python scripts/generate_sample_data.py
 python scripts/load_samples_to_s3.py
 ```
@@ -560,7 +560,7 @@ intellidoc/
 │   │   ├── 05_streams_tasks.sql      # CDC stream + task DAG
 │   │   └── 06_secure_views.sql       # client-scoped views
 │   ├── lambda/
-│   │   └── validation_handler.py     # SHA-256 + DynamoDB CBDCCollection validation
+│   │   └── validation_handler.py     # SHA-256 + DynamoDB CustodyCollectionRegistry validation
 │   └── dynamodb/
 │       └── client_registry_table.json
 ├── pipeline/
@@ -581,10 +581,32 @@ intellidoc/
 │   ├── monitor_pipeline.py           # end-to-end pipeline health monitor (Python)
 │   └── monitor_pipeline.sql          # monitoring queries for Snowflake Worksheet
 └── tests/
-    ├── test_validation.py            # Lambda + DynamoDB CBDCCollection tests
+    ├── test_validation.py            # Lambda + DynamoDB CustodyCollectionRegistry tests
     ├── test_chunking.py              # PDF/CSV/XLSX extraction tests
     └── test_search.py                # RAG pipeline unit tests
 ```
+
+---
+
+## Source Files
+
+The `Source Files/` directory contains sample documents that mirror the **exact format and structure of real custody banking documents** — field names, layouts, reference numbering schemes, and data types are all authentic. All values (names, amounts, account numbers, dates, tax IDs) are entirely **fictional dummy data** generated for demonstration purposes only. No real client, transaction, or financial data is included anywhere in this repository.
+
+| File | Document Type | Format |
+|---|---|---|
+| `billing_invoice_INV-2024-GB-0892.pdf` | Custody billing invoice — safekeeping, settlement, corporate action fees | PDF |
+| `billing_valuation_VAL-2024-GB-0331.pdf` | Portfolio valuation statement — NAV breakdown by asset class | PDF |
+| `custody_tax_document_TAX-CUST-2024-0001.pdf` | Annual custody tax summary — 1099-DIV/B/INT dividends and capital gains | PDF |
+| `tax_reclaim_RECLAIM-2024-0042.pdf` | Withholding tax reclaim application — treaty rates, reclaimable amounts | PDF |
+| `custody_billing_corporate_actions_Q1_2024.pdf` | Corporate actions billing — dividend processing, splits, tender offers | PDF |
+| `billing_transactions_Q1_2024.csv` | Transaction report — BUY/SELL trades with CUSIP, settlement dates, commissions | CSV |
+| `billing_surcharges_Q1_2024.csv` | Surcharge statement — late settlement penalties, FX conversion fees | CSV |
+| `billing_corporate_actions_income_Q1_2024.csv` | Income report — dividends and interest with WHT deducted | CSV |
+| `tax_profile_GB-CUST-00421.csv` | Tax profile — W-8/W-9 status, FATCA/CRS classification, treaty rates | CSV |
+
+Each document also has a corresponding **metadata JSON** in `Source Files/metadata/` — this is the sidecar file that the ingestion pipeline reads to extract `client_id`, `account_id`, `branch_id`, `file_hash`, and other routing attributes before the document is validated and loaded into Snowflake.
+
+These files serve as the input to `scripts/load_samples_to_s3.py` and are used by the integration tests in `tests/`.
 
 ---
 

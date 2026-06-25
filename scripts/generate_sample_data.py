@@ -38,37 +38,37 @@ SAMPLES_DIR.mkdir(exist_ok=True)
 # ── Client definitions (matching CLIENT_MAPPING in 02_tables.sql) ────────────
 CLIENTS = [
     {
-        "client_id":  "CLIENT_APEX",
-        "name":       "Apex Pension Fund LLC",
-        "account":    "GB-CUST-00421",
-        "branch":     "BRANCH-GLOBALBANK",
-        "address":    "200 Park Ave, New York, NY 10166",
-        "client_type": "Institutional – Qualified Pension Fund",
-        "tin":        "XX-XXXXXXX",
-        "w_form":     "W-9",
-        "fatca":      "Participating FFI",
+        "client_account_id": "APEX_READER",       # Snowflake reader account name
+        "name":              "Apex Pension Fund LLC",
+        "account":           "GB-CUST-00421",
+        "branch":            "BRANCH-GLOBALBANK",
+        "address":           "200 Park Ave, New York, NY 10166",
+        "client_type":       "Institutional – Qualified Pension Fund",
+        "tin":               "XX-XXXXXXX",
+        "w_form":            "W-9",
+        "fatca":             "Participating FFI",
     },
     {
-        "client_id":  "CLIENT_MERIDIAN",
-        "name":       "Meridian Asset Management",
-        "account":    "GB-CUST-00532",
-        "branch":     "BRANCH-GLOBALBANK",
-        "address":    "1 State Street Plaza, New York, NY 10004",
-        "client_type": "Institutional – Investment Manager",
-        "tin":        "YY-YYYYYYY",
-        "w_form":     "W-9",
-        "fatca":      "Participating FFI",
+        "client_account_id": "MERIDIAN_READER",
+        "name":              "Meridian Asset Management",
+        "account":           "GB-CUST-00532",
+        "branch":            "BRANCH-GLOBALBANK",
+        "address":           "1 State Street Plaza, New York, NY 10004",
+        "client_type":       "Institutional – Investment Manager",
+        "tin":               "YY-YYYYYYY",
+        "w_form":            "W-9",
+        "fatca":             "Participating FFI",
     },
     {
-        "client_id":  "CLIENT_SUMMIT",
-        "name":       "Summit Endowment Fund",
-        "account":    "GB-CUST-00615",
-        "branch":     "BRANCH-GLOBALBANK",
-        "address":    "500 Boylston Street, Boston, MA 02116",
-        "client_type": "Institutional – Endowment",
-        "tin":        "ZZ-ZZZZZZZ",
-        "w_form":     "W-9",
-        "fatca":      "Participating FFI",
+        "client_account_id": "SUMMIT_READER",
+        "name":              "Summit Endowment Fund",
+        "account":           "GB-CUST-00615",
+        "branch":            "BRANCH-GLOBALBANK",
+        "address":           "500 Boylston Street, Boston, MA 02116",
+        "client_type":       "Institutional – Endowment",
+        "tin":               "ZZ-ZZZZZZZ",
+        "w_form":            "W-9",
+        "fatca":             "Participating FFI",
     },
 ]
 
@@ -156,7 +156,7 @@ def _bank_header(styles):
 def generate_custody_billing_invoice(client, year, quarter):
     inv_num   = f"INV-{year}-GB-{random.randint(1000,9999)}"
     q_end     = date(year, quarter * 3, 28)
-    filename  = f"{client['client_id'].lower()}_billing_invoice_{inv_num}.pdf"
+    filename  = f"{client['client_account_id'].lower()}_billing_invoice_{inv_num}.pdf"
     path      = SAMPLES_DIR / filename
 
     if not REPORTLAB_OK:
@@ -220,7 +220,7 @@ def generate_custody_billing_invoice(client, year, quarter):
 def generate_portfolio_valuation(client, year, quarter):
     val_date = date(year, quarter * 3, 31 if quarter in (1,2,3) else 30)
     val_id   = f"VAL-{year}-GB-{random.randint(1000,9999)}"
-    filename = f"{client['client_id'].lower()}_portfolio_valuation_{val_id}.pdf"
+    filename = f"{client['client_account_id'].lower()}_portfolio_valuation_{val_id}.pdf"
     path     = SAMPLES_DIR / filename
 
     if not REPORTLAB_OK:
@@ -287,7 +287,7 @@ def generate_portfolio_valuation(client, year, quarter):
 
 def generate_custody_tax_summary(client, tax_year):
     doc_id   = f"TAX-CUST-{tax_year}-{random.randint(1000,9999)}"
-    filename = f"{client['client_id'].lower()}_custody_tax_summary_{doc_id}.pdf"
+    filename = f"{client['client_account_id'].lower()}_custody_tax_summary_{doc_id}.pdf"
     path     = SAMPLES_DIR / filename
 
     if not REPORTLAB_OK:
@@ -348,7 +348,7 @@ def generate_custody_tax_summary(client, tax_year):
 
 def generate_tax_reclaim_application(client, year, quarter):
     claim_ref = f"RECLAIM-{year}-{random.randint(1000,9999)}"
-    filename  = f"{client['client_id'].lower()}_tax_reclaim_{claim_ref}.pdf"
+    filename  = f"{client['client_account_id'].lower()}_tax_reclaim_{claim_ref}.pdf"
     path      = SAMPLES_DIR / filename
 
     if not REPORTLAB_OK:
@@ -407,7 +407,7 @@ def generate_tax_reclaim_application(client, year, quarter):
 
 def generate_corporate_actions_billing(client, year, quarter):
     doc_id   = f"CA-BILL-{year}-{random.randint(1000,9999)}"
-    filename = f"{client['client_id'].lower()}_corporate_actions_billing_{doc_id}.pdf"
+    filename = f"{client['client_account_id'].lower()}_corporate_actions_billing_{doc_id}.pdf"
     path     = SAMPLES_DIR / filename
     q_end    = date(year, quarter * 3, 28)
 
@@ -476,7 +476,7 @@ def _write_csv(path: Path, fieldnames: list, rows: list) -> Path:
 
 
 def generate_transaction_report_csv(client, year, quarter):
-    filename = f"{client['client_id'].lower()}_billing_transactions_Q{quarter}_{year}.csv"
+    filename = f"{client['client_account_id'].lower()}_billing_transactions_Q{quarter}_{year}.csv"
     path     = SAMPLES_DIR / filename
     rows = []
     for i in range(1, random.randint(5, 9)):
@@ -510,7 +510,7 @@ def generate_transaction_report_csv(client, year, quarter):
 
 
 def generate_surcharge_statement_csv(client, year, quarter):
-    filename = f"{client['client_id'].lower()}_billing_surcharges_Q{quarter}_{year}.csv"
+    filename = f"{client['client_account_id'].lower()}_billing_surcharges_Q{quarter}_{year}.csv"
     path     = SAMPLES_DIR / filename
     inv_ref  = f"INV-{year}-GB-{random.randint(1000,9999)}"
     rows = []
@@ -534,7 +534,7 @@ def generate_surcharge_statement_csv(client, year, quarter):
 
 
 def generate_income_report_csv(client, year, quarter):
-    filename = f"{client['client_id'].lower()}_billing_corporate_actions_income_Q{quarter}_{year}.csv"
+    filename = f"{client['client_account_id'].lower()}_billing_corporate_actions_income_Q{quarter}_{year}.csv"
     path     = SAMPLES_DIR / filename
     rows = []
     for i, (name, cusip, _) in enumerate(random.sample(EQUITIES, random.randint(4, 6)), 1):
@@ -563,7 +563,7 @@ def generate_income_report_csv(client, year, quarter):
 
 
 def generate_tax_profile_csv(client):
-    filename = f"{client['client_id'].lower()}_tax_profile_{client['account']}.csv"
+    filename = f"{client['client_account_id'].lower()}_tax_profile_{client['account']}.csv"
     path     = SAMPLES_DIR / filename
     rows = [
         {"Field": "Account_No",                  "Value": client["account"]},
@@ -601,7 +601,7 @@ def main():
     generated: list[dict] = []
 
     for client in CLIENTS:
-        cid = client["client_id"]
+        cid = client["client_account_id"]
         print(f"\n-- {client['name']} ({client['account']}) --")
 
         # ── PDFs (one per type per client) ────────────────────────────────
@@ -645,15 +645,15 @@ def main():
     # ── Include the real Source Files in the manifest ─────────────────────
     source_dir = Path(__file__).parent.parent / "Source Files"
     FORMAT_MAP = {
-        "billing_invoice":                   ("CUSTODY_BILLING_INVOICE",  "CLIENT_APEX", "PDF"),
-        "billing_valuation":                 ("PORTFOLIO_VALUATION",       "CLIENT_APEX", "PDF"),
-        "custody_tax_document":              ("CUSTODY_TAX_SUMMARY",       "CLIENT_APEX", "PDF"),
-        "tax_reclaim":                       ("TAX_RECLAIM_APPLICATION",   "CLIENT_APEX", "PDF"),
-        "custody_billing_corporate_actions": ("CORPORATE_ACTIONS_BILLING", "CLIENT_APEX", "PDF"),
-        "billing_transactions":              ("TRANSACTION_REPORT",        "CLIENT_APEX", "CSV"),
-        "billing_surcharges":                ("SURCHARGE_STATEMENT",       "CLIENT_APEX", "CSV"),
-        "billing_corporate_actions_income":  ("INCOME_REPORT",             "CLIENT_APEX", "CSV"),
-        "tax_profile":                       ("TAX_PROFILE",               "CLIENT_APEX", "CSV"),
+        "billing_invoice":                   ("CUSTODY_BILLING_INVOICE",  "APEX_READER", "PDF"),
+        "billing_valuation":                 ("PORTFOLIO_VALUATION",       "APEX_READER", "PDF"),
+        "custody_tax_document":              ("CUSTODY_TAX_SUMMARY",       "APEX_READER", "PDF"),
+        "tax_reclaim":                       ("TAX_RECLAIM_APPLICATION",   "APEX_READER", "PDF"),
+        "custody_billing_corporate_actions": ("CORPORATE_ACTIONS_BILLING", "APEX_READER", "PDF"),
+        "billing_transactions":              ("TRANSACTION_REPORT",        "APEX_READER", "CSV"),
+        "billing_surcharges":                ("SURCHARGE_STATEMENT",       "APEX_READER", "CSV"),
+        "billing_corporate_actions_income":  ("INCOME_REPORT",             "APEX_READER", "CSV"),
+        "tax_profile":                       ("TAX_PROFILE",               "APEX_READER", "CSV"),
     }
     if source_dir.exists():
         print("\n-- Real source files (Source Files/) --")
@@ -661,12 +661,12 @@ def main():
             if src_file.suffix.lower() not in (".pdf", ".csv", ".xlsx"):
                 continue
             stem = src_file.stem.lower()
-            doc_type, client_id, fmt = "UNKNOWN", "CLIENT_APEX", src_file.suffix.lstrip(".").upper()
+            doc_type, client_account_id, fmt = "UNKNOWN", "APEX_READER", src_file.suffix.lstrip(".").upper()
             for prefix, (t, c, f) in FORMAT_MAP.items():
                 if stem.startswith(prefix):
-                    doc_type, client_id, fmt = t, c, f
+                    doc_type, client_account_id, fmt = t, c, f
                     break
-            generated.append({"path": str(src_file), "type": doc_type, "client": client_id, "format": fmt})
+            generated.append({"path": str(src_file), "type": doc_type, "client": client_account_id, "format": fmt})
             print(f"  {doc_type:<30} {src_file.name}")
 
     manifest_path = SAMPLES_DIR / "manifest.json"

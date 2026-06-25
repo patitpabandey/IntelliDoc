@@ -3,14 +3,11 @@
 -- Snowflake stored procedure: ROUTE_TO_CLIENT_STAGE()
 --
 -- Reads new rows from LANDING_STREAM, then for each file:
---   1. Resolves CLIENT_ID and CLIENT_STAGE_NAME from CLIENT_MAPPING
---      using ACCOUNT_ID + BRANCH_ID (set by the Lambda validator).
---      This is the only place CLIENT_ID is assigned — DynamoDB validation
---      uses cbdccollectioncountry + cbdccollectionlegalentityid; Snowflake
---      routing uses ACCOUNT_ID + BRANCH_ID.
---   2. Updates DOCUMENT_REGISTRY.CLIENT_ID.
+--   1. JOINs CLIENT_MAPPING on ACCOUNT_ID + BRANCH_ID to resolve
+--      CLIENT_ACCOUNT_ID (reader account name) and CLIENT_STAGE_NAME.
+--   2. Sets DOCUMENT_REGISTRY.CLIENT_ACCOUNT_ID.
 --   3. COPY FILES → per-client internal stage.
---   4. REMOVE from LANDING_STAGE.
+--   4. REMOVE file from LANDING_STAGE.
 --   5. Updates status → STAGED, writes audit row.
 -- ============================================================
 
@@ -28,47 +25,42 @@ var routed  = 0;
 var skipped = 0;
 var failed  = 0;
 
-// ── Fetch new rows from the landing stream ───────────────────────────────────
-// Join DOCUMENT_REGISTRY on filename to get ACCOUNT_ID + BRANCH_ID,
-// then join CLIENT_MAPPING on ACCOUNT_ID + BRANCH_ID to resolve routing.
 var stream_sql = `
-    SELECT distinct
+    SELECT DISTINCT
         ls.RELATIVE_PATH,
         dr.FILE_ID,
         dr.ACCOUNT_ID,
         dr.BRANCH_ID,
         dr.PROCESSING_STATUS,
-        cm.CLIENT_ID,
+        cm.CLIENT_ACCOUNT_ID,
         cm.CLIENT_STAGE_NAME
     FROM LANDING_STREAM ls
     JOIN DOCUMENT_REGISTRY dr
         ON SPLIT_PART(ls.RELATIVE_PATH, '/', 2) = dr.FILE_NAME
     JOIN CLIENT_MAPPING cm
-        ON dr.ACCOUNT_ID = cm.ACCOUNT_ID
-       AND dr.BRANCH_ID  = cm.BRANCH_ID
-       AND cm.ACTIVE_FLAG = TRUE
+        ON  dr.ACCOUNT_ID = cm.ACCOUNT_ID
+        AND dr.BRANCH_ID  = cm.BRANCH_ID
+        AND cm.ACTIVE_FLAG = TRUE
     WHERE ls.METADATA$ACTION = 'INSERT'
 `;
 
 var rows = snowflake.execute({ sqlText: stream_sql });
 
 while (rows.next()) {
-    var path       = rows.getColumnValue(1);
-    var file_id    = rows.getColumnValue(2);
-    var account_id = rows.getColumnValue(3);
-    var branch_id  = rows.getColumnValue(4);
-    var status     = rows.getColumnValue(5);
-    var client_id  = rows.getColumnValue(6);
-    var stage_name = rows.getColumnValue(7);
+    var path              = rows.getColumnValue(1);
+    var file_id           = rows.getColumnValue(2);
+    var account_id        = rows.getColumnValue(3);
+    var branch_id         = rows.getColumnValue(4);
+    var status            = rows.getColumnValue(5);
+    var client_account_id = rows.getColumnValue(6);
+    var stage_name        = rows.getColumnValue(7);
 
-    // Idempotency: skip files already past STAGED
     var terminal = ['TEXT_EXTRACTED','CHUNKED','EMBEDDED','CLASSIFIED','INDEXED','AVAILABLE','ARCHIVED'];
     if (terminal.indexOf(status) >= 0) {
         skipped++;
         continue;
     }
 
-    // Audit: STARTED
     snowflake.execute({
         sqlText: `INSERT INTO DOCUMENT_PROCESSING_AUDIT
                       (FILE_ID, STEP_NAME, STATUS, START_TS)
@@ -77,14 +69,14 @@ while (rows.next()) {
     });
 
     try {
-        // Step 1: Assign CLIENT_ID resolved from CLIENT_MAPPING
+        // Step 1: Set CLIENT_ACCOUNT_ID from CLIENT_MAPPING
         snowflake.execute({
             sqlText: `UPDATE DOCUMENT_REGISTRY
-                      SET CLIENT_ID   = ?,
-                          UPDATED_TS  = SYSDATE()
-                      WHERE FILE_ID   = ?
-                        AND CLIENT_ID IS NULL`,
-            binds: [client_id, file_id]
+                      SET CLIENT_ACCOUNT_ID = ?,
+                          UPDATED_TS        = SYSDATE()
+                      WHERE FILE_ID             = ?
+                        AND CLIENT_ACCOUNT_ID IS NULL`,
+            binds: [client_account_id, file_id]
         });
 
         // Step 2: COPY FILES → per-client internal stage
@@ -94,7 +86,7 @@ while (rows.next()) {
                       FROM @LANDING_STAGE/${path}`
         });
 
-        // Step 3: Remove from landing (keeps landing stage clean)
+        // Step 3: Remove from landing
         snowflake.execute({ sqlText: `REMOVE @LANDING_STAGE/${path}` });
 
         // Step 4: Update registry status and location
@@ -107,16 +99,14 @@ while (rows.next()) {
             binds: [path, file_id]
         });
 
-        // Also propagate CLIENT_ID into any existing DOCUMENT_CHUNKS rows
-        // (unlikely at this stage but safe to keep in sync)
+        // Step 5: Propagate CLIENT_ACCOUNT_ID to any existing DOCUMENT_CHUNKS rows
         snowflake.execute({
             sqlText: `UPDATE DOCUMENT_CHUNKS
-                      SET CLIENT_ID = ?
+                      SET CLIENT_ACCOUNT_ID = ?
                       WHERE FILE_ID = ?`,
-            binds: [client_id, file_id]
+            binds: [client_account_id, file_id]
         });
 
-        // Audit: COMPLETED
         snowflake.execute({
             sqlText: `INSERT INTO DOCUMENT_PROCESSING_AUDIT
                           (FILE_ID, STEP_NAME, STATUS, START_TS, END_TS)

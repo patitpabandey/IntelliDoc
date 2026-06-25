@@ -300,7 +300,7 @@ def check_search_audit(hours: int):
     print(hdr("STAGE 8 — Search Audit"))
 
     recent = sf_query(f"""
-        SELECT CLIENT_ID, SEARCH_TERM, SEARCH_CONFIDENCE,
+        SELECT CLIENT_ACCOUNT_ID, SEARCH_TERM, SEARCH_CONFIDENCE,
                RESULT_COUNT, EXECUTION_TIME_MS, SEARCH_TS
         FROM SEARCH_AUDIT
         WHERE SEARCH_TS > DATEADD(HOURS, -{hours}, CURRENT_TIMESTAMP())
@@ -312,7 +312,7 @@ def check_search_audit(hours: int):
         print(ok("  No searches yet"))
     for r in recent:
         icon = warn("") if r["SEARCH_CONFIDENCE"] == "low" else ok("")
-        print(f"  {icon} [{r['CLIENT_ID']:<15}] {r['SEARCH_TERM'][:50]:<52} conf={r['SEARCH_CONFIDENCE']:<8} {r['EXECUTION_TIME_MS']}ms")
+        print(f"  {icon} [{r['CLIENT_ACCOUNT_ID']:<15}] {r['SEARCH_TERM'][:50]:<52} conf={r['SEARCH_CONFIDENCE']:<8} {r['EXECUTION_TIME_MS']}ms")
 
     perf = sf_query("""
         SELECT SEARCH_CONFIDENCE,

@@ -4,8 +4,8 @@ Reads samples/manifest.json and uploads each file to:
   S3 /incoming/<Accountid>/<filename>       (document)
   S3 /metadata/<file_id>.json               (CBDC metadata companion)
 
-Metadata schema matches the new CBDCCollection DynamoDB table:
-  cbdccollectioncountry, cbdccollectionlegalentityid,
+Metadata schema matches the new CustodyCollectionRegistry DynamoDB table:
+  custody_country, legal_entity_id,
   allowed_formats, Source, Destination, Accountid, branch_id, filehash
 
 The manifest (produced by generate_sample_data.py) also includes the real
@@ -38,8 +38,8 @@ INCOMING_PREFIX = os.environ.get("S3_INCOMING_PREFIX", "incoming/")
 METADATA_PREFIX = os.environ.get("S3_METADATA_PREFIX", "metadata/")
 AWS_REGION      = os.environ.get("AWS_REGION", "us-east-1")
 
-# CBDC collection registry — mirrors CBDCCollection DynamoDB items
-# Key: (cbdccollectioncountry, cbdccollectionlegalentityid)
+# CBDC collection registry — mirrors CustodyCollectionRegistry DynamoDB items
+# Key: (custody_country, legal_entity_id)
 _CBDC_REGISTRY = {
     ("US", "GB-CUST-00421"): {
         "Accountid":  "GB-CUST-00421",
@@ -93,13 +93,13 @@ def upload_file(s3, path: Path, entry: dict, dry_run: bool) -> dict:
     file_hash  = sha256(path)
     suffix     = path.suffix.lstrip(".").upper()
 
-    # Metadata schema aligned with CBDCCollection DynamoDB table
+    # Metadata schema aligned with CustodyCollectionRegistry DynamoDB table
     metadata = {
         "file_id":                    file_id,
         "file_name":                  path.name,
         "file_format":                suffix,
-        "cbdccollectioncountry":      country,
-        "cbdccollectionlegalentityid": legal_entity,
+        "custody_country":      country,
+        "legal_entity_id": legal_entity,
         "allowed_formats":            ["PDF", "XLSX", "CSV"],
         "Source":                     "S3",
         "Destination":                "Snowflake",
