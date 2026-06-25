@@ -560,7 +560,11 @@ intellidoc/
 │   │   ├── 05_streams_tasks.sql      # CDC stream + task DAG
 │   │   └── 06_secure_views.sql       # client-scoped views
 │   ├── lambda/
-│   │   └── validation_handler.py     # SHA-256 + DynamoDB CustodyCollectionRegistry validation
+│   │   ├── validation_handler.py         # SHA-256 + DynamoDB CustodyCollectionRegistry validation
+│   │   ├── archive_find_candidates.py    # query Snowflake for AVAILABLE docs past retention
+│   │   ├── archive_update_status.py      # update DOCUMENT_REGISTRY + audit for ARCHIVING/ARCHIVED
+│   │   ├── archive_s3_glacier_move.py    # copy S3 object to GLACIER_IR, delete original
+│   │   └── archive_alert.py              # publish SNS notifications for archive events
 │   └── dynamodb/
 │       └── client_registry_table.json
 ├── pipeline/
