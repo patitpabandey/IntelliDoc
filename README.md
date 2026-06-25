@@ -573,11 +573,11 @@ intellidoc/
 │   └── search/
 │       └── client_search_proc.py     # RAG: embed → retrieve → rerank
 ├── Source Files/
-│   ├── metadata/                     # CBDC metadata JSONs (one per document)
+│   ├── metadata/                     # metadata JSONs (one per document)
 │   └── *.pdf / *.csv                 # Real Global Bank N.A. custody documents
 ├── scripts/
 │   ├── generate_sample_data.py       # synthetic custody banking documents
-│   ├── load_samples_to_s3.py         # upload with CBDC metadata
+│   ├── load_samples_to_s3.py         # upload with custody metadata
 │   ├── monitor_pipeline.py           # end-to-end pipeline health monitor (Python)
 │   └── monitor_pipeline.sql          # monitoring queries for Snowflake Worksheet
 └── tests/
