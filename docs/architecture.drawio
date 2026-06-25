@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="2200" math="0" shadow="1">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- TITLE -->
+    <mxCell id="title" value="IntelliDoc — AI-Powered RAG Document Intelligence Platform" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=22;fontStyle=1;fontColor=#232F3E;" vertex="1" parent="1">
+      <mxGeometry x="100" y="18" width="3400" height="50" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════
+         AWS CLOUD GROUP
+    ═══════════════════════════════════════════════ -->
+    <mxCell id="aws-cloud" value="AWS Cloud" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=#FAFAFA;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;fontSize=13;fontStyle=1;grStroke=0;" vertex="1" parent="1">
+      <mxGeometry x="40" y="80" width="1280" height="1960" as="geometry" />
+    </mxCell>
+
+    <!-- ── INGESTION LANE ── -->
+    <mxCell id="ingest-lane" value="Ingestion &amp; Validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#FF9900;fontSize=11;fontStyle=1;verticalAlign=top;arcSize=3;strokeWidth=2;" vertex="1" parent="1">
+      <mxGeometry x="70" y="120" width="1220" height="860" as="geometry" />
+    </mxCell>
+
+    <!-- S3 Incoming -->
+    <mxCell id="s3-in" value="S3 /incoming/" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#3F8624;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1">
+      <mxGeometry x="160" y="220" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="s3-in-lbl" value="S3 Bucket&#xa;/incoming/&lt;AccountId&gt;/file" style="text;html=1;align=center;fontSize=9;fontColor=#232F3E;" vertex="1" parent="1">
+      <mxGeometry x="120" y="304" width="160" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- EventBridge -->
+    <mxCell id="eb" value="EventBridge" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#E7157B;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge;" vertex="1" parent="1">
+      <mxGeometry x="160" y="420" width="78" height="78" as="geometry" />
+    </mxCell>
+
+    <!-- SQS -->
+    <mxCell id="sqs" value="Amazon SQS" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#E7157B;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sqs;" vertex="1" parent="1">
+      <mxGeometry x="390" y="420" width="78" height="78" as="geometry" />
+    </mxCell>
+
+    <!-- Lambda Validation -->
+    <mxCell id="lam-val" value="Lambda&#xa;Validation Handler" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+      <mxGeometry x="620" y="420" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="lam-val-lbl" value="SHA-256 integrity&#xa;Format validation" style="text;html=1;align=center;fontSize=9;fontColor=#555;" vertex="1" parent="1">
+      <mxGeometry x="580" y="504" width="160" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- DynamoDB -->
+    <mxCell id="ddb" value="DynamoDB" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#3F8624;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;" vertex="1" parent="1">
+      <mxGeometry x="860" y="310" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="ddb-lbl" value="CustodyCollectionRegistry&#xa;PK: custody_country&#xa;SK: legal_entity_id" style="text;html=1;align=center;fontSize=9;fontColor=#232F3E;" vertex="1" parent="1">
+      <mxGeometry x="815" y="394" width="170" height="40" as="geometry" />
+    </mxCell>
+
+    <!-- SNS Alert -->
+    <mxCell id="sns" value="Amazon SNS&#xa;Quarantine Alert" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#E7157B;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;" vertex="1" parent="1">
+      <mxGeometry x="860" y="530" width="78" height="78" as="geometry" />
+    </mxCell>
+
+    <!-- S3 Validated -->
+    <mxCell id="s3-val" value="S3 /validated/" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#3F8624;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1">
+      <mxGeometry x="620" y="660" width="78" height="78" as="geometry" />
+    </mxCell>
+
+    <!-- S3 Quarantine -->
+    <mxCell id="s3-quar" value="S3 /quarantine/" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#DD344C;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1">
+      <mxGeometry x="1100" y="420" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="s3-quar-lbl" value="Invalid / unknown&#xa;collection / hash mismatch" style="text;html=1;align=center;fontSize=9;fontColor=#DD344C;" vertex="1" parent="1">
+      <mxGeometry x="1058" y="504" width="164" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- ── ARCHIVE WORKFLOW LANE ── -->
+    <mxCell id="archive-lane" value="Archive Workflow — AWS Step Functions (730-day retention)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E6;strokeColor=#FF9900;fontSize=11;fontStyle=1;verticalAlign=top;arcSize=2;strokeWidth=2;" vertex="1" parent="1">
+      <mxGeometry x="70" y="1030" width="1220" height="970" as="geometry" />
+    </mxCell>
+
+    <!-- Step Functions -->
+    <mxCell id="sfn" value="Step Functions&#xa;Archive Workflow" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#E7157B;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.step_functions;" vertex="1" parent="1">
+      <mxGeometry x="160" y="1120" width="78" height="78" as="geometry" />
+    </mxCell>
+
+    <!-- Lambda find_candidates -->
+    <mxCell id="lam-find" value="Lambda&#xa;find_candidates" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+      <mxGeometry x="390" y="1120" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="lam-find-lbl" value="Query Snowflake for&#xa;AVAILABLE docs &gt; 730d" style="text;html=1;align=center;fontSize=9;fontColor=#555;" vertex="1" parent="1">
+      <mxGeometry x="348" y="1204" width="164" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- Lambda update_status ARCHIVING -->
+    <mxCell id="lam-upd" value="Lambda&#xa;update_status" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+      <mxGeometry x="620" y="1120" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="lam-upd-lbl" value="DOCUMENT_REGISTRY&#xa;→ ARCHIVING" style="text;html=1;align=center;fontSize=9;fontColor=#555;" vertex="1" parent="1">
+      <mxGeometry x="578" y="1204" width="164" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- Lambda glacier_move -->
+    <mxCell id="lam-glac" value="Lambda&#xa;s3_glacier_move" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+      <mxGeometry x="860" y="1120" width="78" height="78" as="geometry" />
+    </mxCell>
+
+    <!-- S3 Glacier -->
+    <mxCell id="glacier" value="S3 Glacier IR&#xa;/archive/" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#3F8624;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3_glacier;" vertex="1" parent="1">
+      <mxGeometry x="860" y="1320" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="glacier-lbl" value="Cold storage ARCHIVED&#xa;Long-term retention" style="text;html=1;align=center;fontSize=9;fontColor=#3F8624;" vertex="1" parent="1">
+      <mxGeometry x="818" y="1404" width="164" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- Lambda update_status ARCHIVED -->
+    <mxCell id="lam-upd2" value="Lambda&#xa;update_status" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+      <mxGeometry x="620" y="1320" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="lam-upd2-lbl" value="DOCUMENT_REGISTRY&#xa;→ ARCHIVED" style="text;html=1;align=center;fontSize=9;fontColor=#555;" vertex="1" parent="1">
+      <mxGeometry x="578" y="1404" width="164" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- Lambda archive_alert -->
+    <mxCell id="lam-alert" value="Lambda&#xa;archive_alert" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=none;fillColor=#ED7100;labelBackgroundColor=#ffffff;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+      <mxGeometry x="1100" y="1120" width="78" height="78" as="geometry" />
+    </mxCell>
+    <mxCell id="lam-alert-lbl" value="SNS completion /&#xa;failure notification" style="text;html=1;align=center;fontSize=9;fontColor=#555;" vertex="1" parent="1">
+      <mxGeometry x="1058" y="1204" width="164" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════
+         SNOWFLAKE GROUP
+    ═══════════════════════════════════════════════ -->
+    <mxCell id="sf-cloud" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F4FD;strokeColor=#29B5E8;fontSize=13;fontStyle=1;verticalAlign=top;arcSize=2;strokeWidth=3;" vertex="1" parent="1">
+      <mxGeometry x="1380" y="80" width="2180" height="1960" as="geometry" />
+    </mxCell>
+
+    <!-- Snowflake logo label -->
+    <mxCell id="sf-logo" value="❄  Snowflake Cortex AI" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=15;fontStyle=1;fontColor=#29B5E8;" vertex="1" parent="1">
+      <mxGeometry x="1400" y="88" width="280" height="34" as="geometry" />
+    </mxCell>
+
+    <!-- ── INGESTION LANE (Snowflake) ── -->
+    <mxCell id="sf-ingest-lane" value="Snowpipe Auto-Ingest" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDEEFF;strokeColor=#29B5E8;fontSize=11;fontStyle=1;verticalAlign=top;arcSize=3;strokeWidth=2;" vertex="1" parent="1">
+      <mxGeometry x="1410" y="560" width="760" height="220" as="geometry" />
+    </mxCell>
+
+    <!-- Snowpipe -->
+    <mxCell id="snowpipe" value="Snowpipe&#xa;(Auto-Ingest)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#29B5E8;strokeColor=#1A8BBF;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="1430" y="620" width="160" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Landing Stage -->
+    <mxCell id="landing-stage" value="@LANDING_STAGE&#xa;(External S3 Stage)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#29B5E8;strokeColor=#1A8BBF;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="1670" y="620" width="180" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Landing Files table -->
+    <mxCell id="landing-files" value="LANDING_FILES table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF4FF;strokeColor=#29B5E8;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1920" y="620" width="200" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- ── ROUTING LANE ── -->
+    <mxCell id="routing-lane" value="Stream + Task Routing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDEEFF;strokeColor=#29B5E8;fontSize=11;fontStyle=1;verticalAlign=top;arcSize=3;strokeWidth=2;" vertex="1" parent="1">
+      <mxGeometry x="1410" y="820" width="760" height="240" as="geometry" />
+    </mxCell>
+
+    <!-- Landing Stream -->
+    <mxCell id="stream" value="LANDING_STREAM&#xa;(CDC Stream)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A8BBF;strokeColor=#0D5F8A;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="1430" y="880" width="180" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Routing Task -->
+    <mxCell id="rtask" value="ROUTING_TASK&#xa;(Every 1 min)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A8BBF;strokeColor=#0D5F8A;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="1680" y="880" width="180" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Route proc -->
+    <mxCell id="route-proc" value="ROUTE_TO_CLIENT_STAGE()&#xa;COPY FILES → client stage&#xa;JOIN CLIENT_MAPPING" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF4FF;strokeColor=#29B5E8;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1680" y="960" width="200" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Per-Client Stages -->
+    <mxCell id="client-stages" value="Per-Client Internal Stages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDEEFF;strokeColor=#29B5E8;fontSize=11;fontStyle=1;verticalAlign=top;arcSize=4;strokeWidth=2;" vertex="1" parent="1">
+      <mxGeometry x="1960" y="820" width="220" height="280" as="geometry" />
+    </mxCell>
+    <mxCell id="apex-stage" value="@APEX_STAGE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#29B5E8;strokeColor=#1A8BBF;fontColor=#FFFFFF;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1978" y="880" width="184" height="36" as="geometry" />
+    </mxCell>
+    <mxCell id="mer-stage" value="@MERIDIAN_STAGE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#29B5E8;strokeColor=#1A8BBF;fontColor=#FFFFFF;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1978" y="928" width="184" height="36" as="geometry" />
+    </mxCell>
+    <mxCell id="sum-stage" value="@SUMMIT_STAGE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#29B5E8;strokeColor=#1A8BBF;fontColor=#FFFFFF;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1978" y="976" width="184" height="36" as="geometry" />
+    </mxCell>
+    <mxCell id="stage-note" value="Files physically isolated&#xa;by client" style="text;html=1;align=center;fontSize=9;fontColor=#555;" vertex="1" parent="1">
+      <mxGeometry x="1978" y="1020" width="184" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- Document Registry -->
+    <mxCell id="doc-reg" value="DOCUMENT_REGISTRY&#xa;RECEIVED → VALIDATED → STAGED&#xa;→ TEXT_EXTRACTED → EMBEDDED&#xa;→ CLASSIFIED → AVAILABLE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF4FF;strokeColor=#29B5E8;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="2260" y="870" width="230" height="90" as="geometry" />
+    </mxCell>
+
+    <!-- Processing Audit -->
+    <mxCell id="proc-audit" value="DOCUMENT_PROCESSING_AUDIT&#xa;Every status transition logged&#xa;(append-only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF4FF;strokeColor=#29B5E8;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="2260" y="980" width="230" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- ── AI PROCESSING LANE ── -->
+    <mxCell id="ai-lane" value="Cortex AI Processing Pipeline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0EEFF;strokeColor=#7B68EE;fontSize=12;fontStyle=1;verticalAlign=top;arcSize=3;strokeWidth=2;" vertex="1" parent="1">
+      <mxGeometry x="1410" y="1120" width="760" height="520" as="geometry" />
+    </mxCell>
+
+    <!-- Extract Task -->
+    <mxCell id="extract" value="EXTRACT_TASK&#xa;Snowpark Python&#xa;pdfplumber / openpyxl / csv&#xa;→ TEXT_EXTRACTED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7B68EE;strokeColor=#5A4FCF;fontColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="1430" y="1180" width="220" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- Embed Task -->
+    <mxCell id="embed" value="EMBED_TASK&#xa;CORTEX.EMBED_TEXT_1024&#xa;('e5-base-v2', chunk_text)&#xa;Chunk: 500 tokens / 50 overlap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7B68EE;strokeColor=#5A4FCF;fontColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="1430" y="1300" width="220" height="90" as="geometry" />
+    </mxCell>
+
+    <!-- Classify Task -->
+    <mxCell id="classify" value="CLASSIFY_TASK&#xa;CORTEX.COMPLETE('mistral-large')&#xa;Zero-shot document type&#xa;→ CLASSIFIED → AVAILABLE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7B68EE;strokeColor=#5A4FCF;fontColor=#FFFFFF;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="1430" y="1430" width="220" height="90" as="geometry" />
+    </mxCell>
+
+    <!-- Document Chunks -->
+    <mxCell id="doc-chunks" value="DOCUMENT_CHUNKS&#xa;CHUNK_TEXT VARCHAR(8000)&#xa;EMBEDDING VECTOR(FLOAT, 1024)&#xa;CLIENT_ID (isolation key)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0FF;strokeColor=#7B68EE;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1730" y="1260" width="220" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- Document Classification -->
+    <mxCell id="doc-class" value="DOCUMENT_CLASSIFICATION&#xa;type | confidence&#xa;key_indicators | summary" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0FF;strokeColor=#7B68EE;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1730" y="1400" width="220" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- ── SEARCH LANE ── -->
+    <mxCell id="search-lane" value="RAG Search &amp; Retrieval" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6FFF2;strokeColor=#00AA55;fontSize=12;fontStyle=1;verticalAlign=top;arcSize=3;strokeWidth=2;" vertex="1" parent="1">
+      <mxGeometry x="1410" y="1690" width="1110" height="320" as="geometry" />
+    </mxCell>
+
+    <!-- Client Search Proc -->
+    <mxCell id="search-proc" value="CLIENT_SEARCH(query, client_id)&#xa;Snowpark Python Stored Proc" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00AA55;strokeColor=#007733;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="1430" y="1750" width="250" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Embed Query -->
+    <mxCell id="embed-q" value="① EMBED_TEXT_1024(query)&#xa;Same model as ingestion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00AA55;strokeColor=#007733;fontColor=#FFFFFF;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1430" y="1840" width="250" height="50" as="geometry" />
+    </mxCell>
+
+    <!-- Vector Search -->
+    <mxCell id="vec-search" value="② VECTOR_COSINE_SIMILARITY&#xa;(embedding, query_vec)&#xa;WHERE CLIENT_ID = :client_id&#xa;ORDER BY score DESC LIMIT 5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00AA55;strokeColor=#007733;fontColor=#FFFFFF;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1430" y="1910" width="250" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- LLM Rerank -->
+    <mxCell id="rerank" value="③ CORTEX.COMPLETE('mistral-large')&#xa;Re-rank Top-5 chunks&#xa;→ file_id + confidence + reason" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00AA55;strokeColor=#007733;fontColor=#FFFFFF;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="1730" y="1750" width="250" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- Secure Views -->
+    <mxCell id="sec-views" value="Secure Views&#xa;(Client-Scoped)&#xa;CURRENT_ACCOUNT() filter&#xa;No cross-tenant leakage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6FFF2;strokeColor=#00AA55;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="2040" y="1750" width="200" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- Search Audit -->
+    <mxCell id="search-audit" value="SEARCH_AUDIT&#xa;query | result_file_id&#xa;confidence | execution_ms" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6FFF2;strokeColor=#00AA55;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="2040" y="1850" width="200" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Result Output -->
+    <mxCell id="result" value="Search Result&#xa;{ file_id, document_type,&#xa;  confidence, reason,&#xa;  stage_path, top_scores }" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFDD;strokeColor=#00AA55;fontColor=#007733;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="2310" y="1760" width="220" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- CLIENT_MAPPING -->
+    <mxCell id="client-map" value="CLIENT_MAPPING&#xa;ACCOUNT_ID + BRANCH_ID&#xa;→ CLIENT_ID + STAGE_NAME" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF4FF;strokeColor=#29B5E8;fontColor=#232F3E;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="2260" y="1120" width="220" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════
+         CONNECTIONS
+    ═══════════════════════════════════════════════ -->
+
+    <!-- S3 incoming → EventBridge -->
+    <mxCell id="c1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF9900;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="s3-in" target="eb" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c1l" value="S3 PutObject event" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c1">
+      <mxGeometry x="-0.5" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+    </mxCell>
+
+    <!-- EventBridge → SQS -->
+    <mxCell id="c2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF9900;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="eb" target="sqs" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- SQS → Lambda -->
+    <mxCell id="c3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF9900;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="sqs" target="lam-val" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Lambda → DynamoDB -->
+    <mxCell id="c4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3F8624;strokeWidth=2;dashed=1;" edge="1" source="lam-val" target="ddb" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c4l" value="registry lookup" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c4">
+      <mxGeometry x="-0.3" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+    </mxCell>
+
+    <!-- Lambda → SNS (failure) -->
+    <mxCell id="c5" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#E7157B;strokeWidth=2;dashed=1;" edge="1" source="lam-val" target="sns" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c5l" value="quarantine alert" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#E7157B;" vertex="1" connectable="0" parent="c5">
+      <mxGeometry x="0.4" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+    </mxCell>
+
+    <!-- Lambda → S3 Validated -->
+    <mxCell id="c6" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3F8624;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="lam-val" target="s3-val" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c6l" value="valid → move" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#3F8624;" vertex="1" connectable="0" parent="c6">
+      <mxGeometry x="-0.5" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+    </mxCell>
+
+    <!-- Lambda → S3 Quarantine -->
+    <mxCell id="c7" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#DD344C;strokeWidth=2;" edge="1" source="lam-val" target="s3-quar" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c7l" value="invalid → quarantine" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#DD344C;" vertex="1" connectable="0" parent="c7">
+      <mxGeometry x="0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+    </mxCell>
+
+    <!-- S3 Validated → Snowpipe (CROSS-BOUNDARY) -->
+    <mxCell id="c8" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#29B5E8;strokeWidth=3;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="s3-val" target="snowpipe" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1340" y="699"/>
+          <mxPoint x="1340" y="650"/>
+          <mxPoint x="1430" y="650"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c8l" value="S3 Event → auto-ingest" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=10;fontColor=#29B5E8;fontStyle=1;" vertex="1" connectable="0" parent="c8">
+      <mxGeometry x="0" y="-14" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+    </mxCell>
+
+    <!-- Snowpipe → Landing Stage -->
+    <mxCell id="c9" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#29B5E8;strokeWidth=2;" edge="1" source="snowpipe" target="landing-stage" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Landing Stage → Landing Files -->
+    <mxCell id="c10" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#29B5E8;strokeWidth=2;" edge="1" source="landing-stage" target="landing-files" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Landing Files → Stream -->
+    <mxCell id="c11" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1A8BBF;strokeWidth=2;" edge="1" source="landing-files" target="stream" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2020" y="680"/>
+          <mxPoint x="2020" y="820"/>
+          <mxPoint x="1520" y="820"/>
+          <mxPoint x="1520" y="880"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c11l" value="CDC" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c11">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- Stream → Routing Task -->
+    <mxCell id="c12" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1A8BBF;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="stream" target="rtask" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Routing Task → Route Proc -->
+    <mxCell id="c13" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#29B5E8;strokeWidth=2;" edge="1" source="rtask" target="route-proc" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Route Proc → Client Stages -->
+    <mxCell id="c14" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#29B5E8;strokeWidth=2;" edge="1" source="route-proc" target="client-stages" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c14l" value="COPY FILES" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c14">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- Route Proc → Document Registry (STAGED) -->
+    <mxCell id="c14b" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#29B5E8;strokeWidth=2;dashed=1;" edge="1" source="route-proc" target="doc-reg" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c14bl" value="STAGED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c14b">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- Route Proc → CLIENT_MAPPING lookup -->
+    <mxCell id="c14c" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#29B5E8;strokeWidth=2;dashed=1;" edge="1" source="route-proc" target="client-map" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1880" y="990"/>
+          <mxPoint x="2260" y="990"/>
+          <mxPoint x="2260" y="1150"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c14cl" value="JOIN lookup" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c14c">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- Client Stages → Extract Task -->
+    <mxCell id="c15" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7B68EE;strokeWidth=2;" edge="1" source="client-stages" target="extract" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2070" y="1100"/>
+          <mxPoint x="1540" y="1100"/>
+          <mxPoint x="1540" y="1180"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c15l" value="EXTRACT_TASK" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#7B68EE;" vertex="1" connectable="0" parent="c15">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- Extract → Embed -->
+    <mxCell id="c16" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7B68EE;strokeWidth=2;" edge="1" source="extract" target="embed" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Embed → Document Chunks -->
+    <mxCell id="c17" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7B68EE;strokeWidth=2;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="embed" target="doc-chunks" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c17l" value="VECTOR stored" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c17">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- Embed → Classify -->
+    <mxCell id="c18" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7B68EE;strokeWidth=2;" edge="1" source="embed" target="classify" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Classify → Document Classification -->
+    <mxCell id="c19" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7B68EE;strokeWidth=2;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="classify" target="doc-class" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Classify → Document Registry AVAILABLE -->
+    <mxCell id="c19b" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7B68EE;strokeWidth=2;dashed=1;" edge="1" source="classify" target="doc-reg" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1540" y="1560"/>
+          <mxPoint x="1540" y="820"/>
+          <mxPoint x="2375" y="820"/>
+          <mxPoint x="2375" y="870"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c19bl" value="AVAILABLE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#7B68EE;" vertex="1" connectable="0" parent="c19b">
+      <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+    </mxCell>
+
+    <!-- Doc Registry AVAILABLE → Search Proc -->
+    <mxCell id="c20" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00AA55;strokeWidth=2;" edge="1" source="doc-reg" target="search-proc" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2375" y="1670"/>
+          <mxPoint x="1555" y="1670"/>
+          <mxPoint x="1555" y="1750"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c20l" value="AVAILABLE docs" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#00AA55;" vertex="1" connectable="0" parent="c20">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- Search Proc → Embed Query -->
+    <mxCell id="c21" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00AA55;strokeWidth=2;" edge="1" source="search-proc" target="embed-q" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Embed Query → Vector Search -->
+    <mxCell id="c22" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00AA55;strokeWidth=2;" edge="1" source="embed-q" target="vec-search" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Vector Search → Document Chunks (lookup) -->
+    <mxCell id="c23" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00AA55;strokeWidth=2;dashed=1;" edge="1" source="vec-search" target="doc-chunks" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1680" y="1960"/>
+          <mxPoint x="1840" y="1960"/>
+          <mxPoint x="1840" y="1300"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c23l" value="cosine similarity" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c23">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- Vector Search → LLM Rerank -->
+    <mxCell id="c24" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00AA55;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" source="vec-search" target="rerank" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1860" y="1950"/>
+          <mxPoint x="1860" y="1820"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c24l" value="Top-5 chunks" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c24">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- LLM Rerank → Result -->
+    <mxCell id="c25" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00AA55;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="rerank" target="result" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2060" y="1785"/>
+          <mxPoint x="2200" y="1785"/>
+          <mxPoint x="2200" y="1800"/>
+          <mxPoint x="2310" y="1800"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Search Proc → Secure Views -->
+    <mxCell id="c26" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00AA55;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="search-proc" target="sec-views" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1860" y="1780"/>
+          <mxPoint x="2040" y="1780"/>
+          <mxPoint x="2040" y="1790"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Rerank → Search Audit -->
+    <mxCell id="c27" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00AA55;strokeWidth=2;dashed=1;" edge="1" source="rerank" target="search-audit" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2060" y="1785"/>
+          <mxPoint x="2140" y="1785"/>
+          <mxPoint x="2140" y="1880"/>
+          <mxPoint x="2040" y="1880"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ARCHIVE: Document Registry → Step Functions (CROSS-BOUNDARY) -->
+    <mxCell id="c28" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF9900;strokeWidth=2;dashed=1;" edge="1" source="doc-reg" target="sfn" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2375" y="1060"/>
+          <mxPoint x="2375" y="1080"/>
+          <mxPoint x="1360" y="1080"/>
+          <mxPoint x="1360" y="1160"/>
+          <mxPoint x="199" y="1160"/>
+          <mxPoint x="199" y="1120"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c28l" value="Schedule / 730d retention" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#FF9900;" vertex="1" connectable="0" parent="c28">
+      <mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+    </mxCell>
+
+    <!-- Step Functions → find_candidates Lambda -->
+    <mxCell id="c29" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF9900;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="sfn" target="lam-find" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- find_candidates → update_status ARCHIVING -->
+    <mxCell id="c30" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF9900;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="lam-find" target="lam-upd" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c30l" value="ARCHIVING" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;" vertex="1" connectable="0" parent="c30">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- update_status → glacier_move -->
+    <mxCell id="c31" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF9900;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="lam-upd" target="lam-glac" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- glacier_move → S3 Glacier -->
+    <mxCell id="c32" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3F8624;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="lam-glac" target="glacier" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c32l" value="GLACIER_IR" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#3F8624;" vertex="1" connectable="0" parent="c32">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- glacier_move → update_status ARCHIVED -->
+    <mxCell id="c33" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF9900;strokeWidth=2;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" edge="1" source="lam-glac" target="lam-upd2" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="860" y="1240"/>
+          <mxPoint x="760" y="1240"/>
+          <mxPoint x="760" y="1320"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c33l" value="ARCHIVED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#FF9900;" vertex="1" connectable="0" parent="c33">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- glacier_move / failure → archive_alert -->
+    <mxCell id="c34" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#DD344C;strokeWidth=2;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="lam-glac" target="lam-alert" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="c34l" value="on failure" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#DD344C;" vertex="1" connectable="0" parent="c34">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <!-- lam-find → Snowflake (candidates query cross-boundary) -->
+    <mxCell id="c35" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#29B5E8;strokeWidth=2;dashed=1;" edge="1" source="lam-find" target="doc-reg" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="429" y="1240"/>
+          <mxPoint x="429" y="1080"/>
+          <mxPoint x="1360" y="1080"/>
+          <mxPoint x="1360" y="915"/>
+          <mxPoint x="2260" y="915"/>
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="c35l" value="query Snowflake" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;fontSize=9;fontColor=#29B5E8;" vertex="1" connectable="0" parent="c35">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+  </root>
+</mxGraphModel>
